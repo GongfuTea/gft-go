@@ -9,106 +9,98 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-type GftDictResolver struct {
+type GftCmsCategoryResolver struct {
 	Query    graphql.Fields
 	Mutation graphql.Fields
 }
 
-var DictResolver = &GftDictResolver{
+var CmsCategoryResolver = &GftCmsCategoryResolver{
 	Query: graphql.Fields{
-		"dataDicts": &graphql.Field{
-			Type: graphql.NewList(GfDataDictType),
-			Args: graphql.FieldConfigArgument{
-				"categoryId": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
-			Resolve: DataDicts,
+		"cmsCategories": &graphql.Field{
+			Type:    graphql.NewList(GfDataCategoryType),
+			Args:    graphql.FieldConfigArgument{},
+			Resolve: dataCategories,
 		},
-		"dataDict": &graphql.Field{
-			Type: GfDataDictType,
+		"cmsCategory": &graphql.Field{
+			Type: GfDataCategoryType,
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
 					Type: graphql.String,
 				},
 			},
-			Resolve: DataDict,
+			Resolve: dataCategory,
 		},
 	},
 
 	Mutation: graphql.Fields{
-		"saveDataDict": &graphql.Field{
-			Type: GfDataDictType,
+		"saveDataCategory": &graphql.Field{
+			Type: GfDataCategoryType,
 			Args: graphql.FieldConfigArgument{
 				"input": &graphql.ArgumentConfig{
-					Type: GfDataDictInput,
+					Type: GfDataCategoryInput,
 				},
 			},
-			Resolve: saveDataDict,
+			Resolve: saveDataCategory,
 		},
-		"delDataDict": &graphql.Field{
+		"delDataCategory": &graphql.Field{
 			Type: graphql.Boolean,
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
 					Type: graphql.String,
 				},
 			},
-			Resolve: delDataDict,
+			Resolve: delDataCategory,
 		},
 	},
 }
 
-func saveDataDict(p graphql.ResolveParams) (interface{}, error) {
+func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item := base.NewGftDict()
+	item := base.GftDictCategory{}
 	err := gql.GqlParseInput(p, &item)
 	if err != nil {
-		fmt.Printf("save dict err, %+v", err)
+		fmt.Printf("save category err, %+v", err)
 	}
+	fmt.Printf("save category, %+v", item)
 
-	return mgo.DictRepo.Save(item)
-
+	return mgo.DictCategoryRepo.Save(item)
 }
 
-func DataDicts(p graphql.ResolveParams) (interface{}, error) {
+func dataCategories(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
-	// categoryId := p.Args["categoryId"].(string)
-	return mgo.DictRepo.All()
+	return mgo.DictCategoryRepo.All()
 }
 
-func DataDict(p graphql.ResolveParams) (interface{}, error) {
-	gql.GqlMustLogin(p)
-	id := p.Args["id"].(string)
-	return mgo.DictRepo.Get(id)
-}
-
-func delDataDict(p graphql.ResolveParams) (interface{}, error) {
+func dataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.DictRepo.Del(id)
+	return mgo.DictCategoryRepo.Get(id)
 }
 
-var GfDataDictType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfDataDict",
+func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
+	gql.GqlMustLogin(p)
+	id := p.Args["id"].(string)
+	return mgo.DictCategoryRepo.Del(id)
+}
+
+var GfDataCategoryType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "GfDataCategory",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
 		},
-		"categoryId": &graphql.Field{
+		"pid": &graphql.Field{
 			Type: graphql.String,
 		},
 		"name": &graphql.Field{
 			Type: graphql.String,
 		},
-		"code": &graphql.Field{
+		"slug": &graphql.Field{
 			Type: graphql.String,
 		},
-		"nickname": &graphql.Field{
+		"mpath": &graphql.Field{
 			Type: graphql.String,
-		},
-		"level": &graphql.Field{
-			Type: graphql.Int,
 		},
 		"note": &graphql.Field{
 			Type: graphql.String,
@@ -119,26 +111,29 @@ var GfDataDictType = graphql.NewObject(graphql.ObjectConfig{
 		"createdAt": &graphql.Field{
 			Type: graphql.String,
 		},
+		"createdBy": &graphql.Field{
+			Type: graphql.String,
+		},
+		// "locale": &graphql.Field{
+		// 	Type: graphql.String,
+		// },
 	},
 })
 
-var GfDataDictInput = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "GfDataDictInput",
+var GfDataCategoryInput = graphql.NewInputObject(graphql.InputObjectConfig{
+	Name: "GfDataCategoryInput",
 	Fields: graphql.InputObjectConfigFieldMap{
 		"id": &graphql.InputObjectFieldConfig{
 			Type: graphql.String,
 		},
-		"categoryId": &graphql.InputObjectFieldConfig{
+		"pid": &graphql.InputObjectFieldConfig{
 			Type: graphql.String,
 		},
 		"name": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
+			Type: graphql.NewNonNull(graphql.String),
 		},
-		"code": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"nickname": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
+		"slug": &graphql.InputObjectFieldConfig{
+			Type: graphql.NewNonNull(graphql.String),
 		},
 		"note": &graphql.InputObjectFieldConfig{
 			Type: graphql.String,

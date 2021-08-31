@@ -1,19 +1,24 @@
 package base
 
 import (
-	"time"
+	"github.com/GongfuTea/gft-go/core/db"
 )
 
 type GftDict struct {
-	Id         string    `bson:"_id,omitempty" json:"id,omitempty"`
-	CategoryId string    `bson:"categoryId" json:"categoryId"`
-	Code       string    `bson:"code" json:"code"`
-	Name       string    `bson:"name" json:"name"`
-	Nickname   string    `bson:"nickname" json:"nickname"`
-	SortOrder  float32   `bson:"sortOrder" json:"sortOrder"`
-	Level      int       `bson:"level" json:"level"`
-	Note       string    `bson:"note" json:"note"`
-	CreatedAt  time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
+	*db.DbEntity `bson:",inline"`
+	CategoryId   string  `bson:"categoryId" json:"categoryId"`
+	Code         string  `bson:"code" json:"code"`
+	Name         string  `bson:"name" json:"name"`
+	Nickname     string  `bson:"nickname" json:"nickname"`
+	SortOrder    float32 `bson:"sortOrder" json:"sortOrder"`
+	Level        int     `bson:"level" json:"level"`
+	Note         string  `bson:"note" json:"note"`
 
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
+}
+
+func NewGftDict() *GftDict {
+	return &GftDict{
+		DbEntity: db.NewDbEntity(),
+	}
 }

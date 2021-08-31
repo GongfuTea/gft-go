@@ -7,7 +7,6 @@ import (
 
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/core/mgo"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,29 +19,6 @@ var DictRepo = &GftDictRepo{
 	&mgo.MgoRepo{
 		Name: "GftDict",
 	},
-}
-
-func (repo GftDictRepo) Save(model base.GftDict) (*base.GftDict, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	var err error
-
-	fmt.Printf("%+v", model)
-
-	if model.Id == "" {
-		model.Id = uuid.NewString()
-		model.CreatedAt = time.Now()
-		_, err = repo.Coll().InsertOne(ctx, model)
-
-	} else {
-		q2 := bson.M{"$set": model}
-		_, err = repo.Coll().UpdateByID(ctx, model.Id, q2)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	return &model, nil
-
 }
 
 func (repo GftDictRepo) All() ([]base.GftDict, error) {
