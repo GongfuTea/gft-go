@@ -3,9 +3,10 @@ package gql
 import (
 	"fmt"
 
-	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/mgo"
+	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/core/gql"
+	"github.com/GongfuTea/gft-go/types"
 	"github.com/graphql-go/graphql"
 )
 
@@ -57,14 +58,14 @@ var CmsCategoryResolver = &GftCmsCategoryResolver{
 func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item := base.GftDictCategory{}
-	err := gql.GqlParseInput(p, &item)
+	item, err := gql.GqlParseInput(p, cms.NewGftCmsCategory())
+
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)
 	}
 	fmt.Printf("save category, %+v", item)
 
-	return mgo.DictCategoryRepo.Save(item)
+	return mgo.DictCategoryRepo.Save(item.(types.ITreeEntity))
 }
 
 func dataCategories(p graphql.ResolveParams) (interface{}, error) {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/mgo"
+	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 )
@@ -61,8 +62,7 @@ var DictResolver = &GftDictResolver{
 func saveDataDict(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item := base.NewGftDict()
-	err := gql.GqlParseInput(p, &item)
+	item, err := gql.GqlParseInput(p, base.NewGftDict())
 	if err != nil {
 		fmt.Printf("save dict err, %+v", err)
 	}
@@ -94,6 +94,10 @@ var GfDataDictType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				source, _ := p.Source.(db.IDbEntity)
+				return source.ID(), nil
+			},
 		},
 		"categoryId": &graphql.Field{
 			Type: graphql.String,
@@ -117,7 +121,11 @@ var GfDataDictType = graphql.NewObject(graphql.ObjectConfig{
 			Type: graphql.Float,
 		},
 		"createdAt": &graphql.Field{
-			Type: graphql.String,
+			Type: graphql.DateTime,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				source, _ := p.Source.(db.IDbEntity)
+				return source.GetCreatedAt(), nil
+			},
 		},
 	},
 })

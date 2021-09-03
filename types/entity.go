@@ -26,7 +26,9 @@ func (e Entity) IsNew() bool {
 }
 
 func (e *Entity) Init() {
-	fmt.Printf("init Entity, %+v\n", e)
 
 	e.Id = uuid.NewString()
+
+	fmt.Printf("init Entity, %+v\n", e)
+
 }

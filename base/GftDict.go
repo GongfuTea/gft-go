@@ -2,6 +2,7 @@ package base
 
 import (
 	"github.com/GongfuTea/gft-go/core/db"
+	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftDict struct {
@@ -17,7 +18,7 @@ type GftDict struct {
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
-func NewGftDict() *GftDict {
+func NewGftDict() types.IEntity {
 	return &GftDict{
 		DbEntity: db.NewDbEntity(),
 	}
