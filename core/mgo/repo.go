@@ -39,7 +39,9 @@ func (repo MgoRepo) Get(id string) (types.IEntity, error) {
 func (repo MgoRepo) Save(model types.IEntity) (types.IEntity, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
+	fmt.Printf("MgoRepo Save, %#v\n", model)
 
+	jsonx.PrintAsJson(model)
 	if model.IsNew() {
 		model.Init()
 		jsonx.PrintAsJson(model)

@@ -14,14 +14,21 @@ type DbTreeEntity struct {
 
 func (e *DbTreeEntity) Init() {
 	e.TreeEntity.Init()
-	fmt.Printf("init DbEntity, %+v\n", e)
-	fmt.Printf("init DbEntity, %+v\n", e.Entity)
-
 	e.CreatedAt = time.Now()
+
+	fmt.Printf("init DbTreeEntity, %+v\n", e)
+	fmt.Printf("init DbTreeEntity, %+v\n", e.Entity)
+
+}
+
+func (e DbTreeEntity) GetCreatedAt() time.Time {
+	return e.CreatedAt
 }
 
 func NewDbTreeEntity() *DbTreeEntity {
 	return &DbTreeEntity{
-		TreeEntity: &types.TreeEntity{},
+		TreeEntity: &types.TreeEntity{
+			Entity: &types.Entity{},
+		},
 	}
 }

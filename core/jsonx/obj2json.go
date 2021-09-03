@@ -11,5 +11,6 @@ func PrintAsJson(data interface{}) {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println("-----------------")
 	fmt.Println(string(e))
 }

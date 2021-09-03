@@ -1,6 +1,10 @@
 package mgo
 
-import "github.com/GongfuTea/gft-go/types"
+import (
+	"fmt"
+
+	"github.com/GongfuTea/gft-go/types"
+)
 
 type MgoTreeRepo struct {
 	*MgoRepo
@@ -14,8 +18,10 @@ func NewMgoTreeRepo(name string, factory func() types.IEntity) *MgoTreeRepo {
 	}
 }
 
-func (repo MgoTreeRepo) Save(model types.ITreeEntity) (types.IEntity, error) {
+func (repo MgoTreeRepo) Save(m types.IEntity) (types.IEntity, error) {
+	fmt.Printf("save MgoTreeRepo, %#v\n", m)
 
+	model, _ := m.(types.ITreeEntity)
 	if model.HasPid() {
 		parent, err := repo.MgoRepo.Get(model.PID())
 		if err == nil {
@@ -24,6 +30,8 @@ func (repo MgoTreeRepo) Save(model types.ITreeEntity) (types.IEntity, error) {
 			}
 		}
 	} else {
+		fmt.Printf("save category, %#v", model)
+
 		model.SetMpath(model.GetSlug() + ".")
 	}
 	return repo.MgoRepo.Save(model)

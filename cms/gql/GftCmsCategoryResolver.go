@@ -6,7 +6,6 @@ import (
 	"github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/core/gql"
-	"github.com/GongfuTea/gft-go/types"
 	"github.com/graphql-go/graphql"
 )
 
@@ -65,7 +64,7 @@ func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	}
 	fmt.Printf("save category, %+v", item)
 
-	return mgo.DictCategoryRepo.Save(item.(types.ITreeEntity))
+	return mgo.DictCategoryRepo.Save(item)
 }
 
 func dataCategories(p graphql.ResolveParams) (interface{}, error) {

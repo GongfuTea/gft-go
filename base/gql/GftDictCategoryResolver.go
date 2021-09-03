@@ -7,7 +7,6 @@ import (
 	"github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
-	"github.com/GongfuTea/gft-go/types"
 	"github.com/graphql-go/graphql"
 )
 
@@ -64,9 +63,10 @@ func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)
 	}
-	fmt.Printf("save category, %+v", item)
 
-	return mgo.DictCategoryRepo.Save(item.(types.ITreeEntity))
+	fmt.Printf("gql save category, %#v\n", item)
+
+	return mgo.DictCategoryRepo.Save(item)
 }
 
 func dataCategories(p graphql.ResolveParams) (interface{}, error) {
@@ -92,7 +92,11 @@ var GfDataCategoryType = graphql.NewObject(graphql.ObjectConfig{
 		"id": &graphql.Field{
 			Type: graphql.String,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				source, _ := p.Source.(db.IDbEntity)
+				fmt.Printf("GfDataCategory source, %#v\n", p.Source)
+
+				source, ok := p.Source.(db.IDbEntity)
+				fmt.Printf("GfDataCategory ok, %#v\n", ok)
+				fmt.Printf("GfDataCategory source, %#v\n", source)
 				return source.ID(), nil
 			},
 		},
