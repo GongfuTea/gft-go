@@ -108,6 +108,10 @@ var GfDataCategoryType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"slug": &graphql.Field{
 			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				source, _ := p.Source.(base.GftDictCategory)
+				return source.Slug, nil
+			},
 		},
 		"mpath": &graphql.Field{
 			Type: graphql.String,
