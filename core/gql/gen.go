@@ -9,6 +9,7 @@ type FieldsConfig struct {
 	Strings        []string
 	NonNullStrings []string
 	Floats         []string
+	Ints           []string
 }
 
 func NewArgId() graphql.FieldConfigArgument {
@@ -61,6 +62,11 @@ func NewObject(name string, fields FieldsConfig) *graphql.Object {
 			Type: graphql.Float,
 		}
 	}
+	for _, f := range fields.Ints {
+		m[f] = &graphql.Field{
+			Type: graphql.Int,
+		}
+	}
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name:   name,
 		Fields: m,
@@ -100,6 +106,12 @@ func NewInputObject(name string, fields FieldsConfig) *graphql.InputObject {
 	for _, f := range fields.Floats {
 		m[f] = &graphql.InputObjectFieldConfig{
 			Type: graphql.Float,
+		}
+	}
+
+	for _, f := range fields.Ints {
+		m[f] = &graphql.InputObjectFieldConfig{
+			Type: graphql.Int,
 		}
 	}
 	return graphql.NewInputObject(graphql.InputObjectConfig{

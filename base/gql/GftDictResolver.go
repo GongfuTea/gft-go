@@ -5,7 +5,6 @@ import (
 
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/mgo"
-	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 )
@@ -27,33 +26,21 @@ var DictResolver = &GftDictResolver{
 			Resolve: DataDicts,
 		},
 		"dataDict": &graphql.Field{
-			Type: GfDataDictType,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			Type:    GfDataDictType,
+			Args:    gql.NewArgId(),
 			Resolve: DataDict,
 		},
 	},
 
 	Mutation: graphql.Fields{
 		"saveDataDict": &graphql.Field{
-			Type: GfDataDictType,
-			Args: graphql.FieldConfigArgument{
-				"input": &graphql.ArgumentConfig{
-					Type: GfDataDictInput,
-				},
-			},
+			Type:    GfDataDictType,
+			Args:    gql.NewArgInput(GfDataDictInput),
 			Resolve: saveDataDict,
 		},
 		"delDataDict": &graphql.Field{
-			Type: graphql.Boolean,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			Type:    graphql.Boolean,
+			Args:    gql.NewArgId(),
 			Resolve: delDataDict,
 		},
 	},
@@ -89,70 +76,15 @@ func delDataDict(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.DictRepo.Del(id)
 }
 
-var GfDataDictType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfDataDict",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				source, _ := p.Source.(db.IDbEntity)
-				return source.ID(), nil
-			},
-		},
-		"categoryId": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"code": &graphql.Field{
-			Type: graphql.String,
-		},
-		"nickname": &graphql.Field{
-			Type: graphql.String,
-		},
-		"level": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"note": &graphql.Field{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"createdAt": &graphql.Field{
-			Type: graphql.DateTime,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				source, _ := p.Source.(db.IDbEntity)
-				return source.GetCreatedAt(), nil
-			},
-		},
-	},
+var GfDataDictType = gql.NewObject("GfDataDict", gql.FieldsConfig{
+	Strings:        []string{"categoryId", "name", "code", "nickname", "note"},
+	NonNullStrings: []string{},
+	Floats:         []string{"sortOrder"},
+	Ints:           []string{"level"},
 })
 
-var GfDataDictInput = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "GfDataDictInput",
-	Fields: graphql.InputObjectConfigFieldMap{
-		"id": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"categoryId": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"name": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"code": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"nickname": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"note": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.InputObjectFieldConfig{
-			Type: graphql.Float,
-		},
-	},
+var GfDataDictInput = gql.NewInputObject("GfDataDictInput", gql.FieldsConfig{
+	Strings:        []string{"id", "categoryId", "nickname", "note"},
+	NonNullStrings: []string{"name", "code"},
+	Floats:         []string{"sortOrder"},
 })

@@ -9,6 +9,7 @@ import (
 	"github.com/GongfuTea/gft-go/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MgoRepo struct {
@@ -34,6 +35,33 @@ func (repo MgoRepo) Get(id string) (types.IEntity, error) {
 	}
 
 	return result, nil
+}
+
+func (repo MgoRepo) All() ([]types.IEntity, error) {
+	var results []types.IEntity
+	var err error
+
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	cur, err := repo.Coll().Find(ctx, bson.D{}, options.Find())
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		elem := repo.factory()
+		err = cur.Decode(elem)
+
+		jsonx.PrintAsJson(elem)
+
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, elem)
+	}
+	if err = cur.Err(); err != nil {
+		return nil, err
+	}
+	cur.Close(ctx)
+	return results, nil
 }
 
 func (repo MgoRepo) Save(model types.IEntity) (types.IEntity, error) {
