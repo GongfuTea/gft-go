@@ -5,7 +5,6 @@ import (
 
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/mgo"
-	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 )
@@ -23,33 +22,21 @@ var DictCategoryResolver = &GftDictCategoryResolver{
 			Resolve: dataCategories,
 		},
 		"dataCategory": &graphql.Field{
-			Type: GfDataCategoryType,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			Type:    GfDataCategoryType,
+			Args:    gql.NewArgId(),
 			Resolve: dataCategory,
 		},
 	},
 
 	Mutation: graphql.Fields{
 		"saveDataCategory": &graphql.Field{
-			Type: GfDataCategoryType,
-			Args: graphql.FieldConfigArgument{
-				"input": &graphql.ArgumentConfig{
-					Type: GfDataCategoryInput,
-				},
-			},
+			Type:    GfDataCategoryType,
+			Args:    gql.NewArgInput(GfDataCategoryInput),
 			Resolve: saveDataCategory,
 		},
 		"delDataCategory": &graphql.Field{
-			Type: graphql.Boolean,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			Type:    graphql.Boolean,
+			Args:    gql.NewArgId(),
 			Resolve: delDataCategory,
 		},
 	},
@@ -86,78 +73,14 @@ func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.DictCategoryRepo.Del(id)
 }
 
-var GfDataCategoryType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfDataCategory",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				fmt.Printf("GfDataCategory source, %#v\n", p.Source)
-
-				source, ok := p.Source.(db.IDbEntity)
-				fmt.Printf("GfDataCategory ok, %#v\n", ok)
-				fmt.Printf("GfDataCategory source, %#v\n", source)
-				return source.ID(), nil
-			},
-		},
-		"pid": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"slug": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				source, _ := p.Source.(base.GftDictCategory)
-				return source.Slug, nil
-			},
-		},
-		"mpath": &graphql.Field{
-			Type: graphql.String,
-		},
-		"note": &graphql.Field{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"createdAt": &graphql.Field{
-			Type: graphql.DateTime,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				source, _ := p.Source.(db.IDbEntity)
-				return source.GetCreatedAt(), nil
-			},
-		},
-		"createdBy": &graphql.Field{
-			Type: graphql.String,
-		},
-		// "locale": &graphql.Field{
-		// 	Type: graphql.String,
-		// },
-	},
+var GfDataCategoryType = gql.NewObjectTree("GfDataCategory", gql.FieldsConfig{
+	Strings:        []string{"pid", "name", "mpath", "note", "createdBy"},
+	NonNullStrings: []string{},
+	Floats:         []string{"sortOrder"},
 })
 
-var GfDataCategoryInput = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "GfDataCategoryInput",
-	Fields: graphql.InputObjectConfigFieldMap{
-		"id": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"pid": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"name": &graphql.InputObjectFieldConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-		"slug": &graphql.InputObjectFieldConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-		"note": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.InputObjectFieldConfig{
-			Type: graphql.Float,
-		},
-	},
+var GfDataCategoryInput = gql.NewInputObject("GfDataCategoryInput", gql.FieldsConfig{
+	Strings:        []string{"id", "pid", "note"},
+	NonNullStrings: []string{"name", "slug"},
+	Floats:         []string{"sortOrder"},
 })

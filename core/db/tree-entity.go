@@ -7,6 +7,11 @@ import (
 	"github.com/GongfuTea/gft-go/types"
 )
 
+type IDbTreeEntity interface {
+	types.ITreeEntity
+	GetCreatedAt() time.Time
+}
+
 type DbTreeEntity struct {
 	*types.TreeEntity `bson:",inline"`
 	CreatedAt         time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
