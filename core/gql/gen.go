@@ -91,7 +91,7 @@ func NewObjectTree(name string, fields FieldsConfig) *graphql.Object {
 
 func NewInputObject(name string, fields FieldsConfig) *graphql.InputObject {
 
-	m := map[string]*graphql.InputObjectFieldConfig{}
+	m := graphql.InputObjectConfigFieldMap{}
 
 	for _, f := range fields.Strings {
 		m[f] = &graphql.InputObjectFieldConfig{
