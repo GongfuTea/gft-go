@@ -3,8 +3,8 @@ package gql
 import (
 	"fmt"
 
-	"github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/cms"
+	"github.com/GongfuTea/gft-go/cms/mgo"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 )
@@ -17,38 +17,26 @@ type GftCmsCategoryResolver struct {
 var CmsCategoryResolver = &GftCmsCategoryResolver{
 	Query: graphql.Fields{
 		"cmsCategories": &graphql.Field{
-			Type:    graphql.NewList(GfDataCategoryType),
+			Type:    graphql.NewList(GfCmsCategoryType),
 			Args:    graphql.FieldConfigArgument{},
 			Resolve: dataCategories,
 		},
 		"cmsCategory": &graphql.Field{
-			Type: GfDataCategoryType,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			Type:    GfCmsCategoryType,
+			Args:    gql.NewArgId(),
 			Resolve: dataCategory,
 		},
 	},
 
 	Mutation: graphql.Fields{
-		"saveDataCategory": &graphql.Field{
-			Type: GfDataCategoryType,
-			Args: graphql.FieldConfigArgument{
-				"input": &graphql.ArgumentConfig{
-					Type: GfDataCategoryInput,
-				},
-			},
+		"saveCmsCategory": &graphql.Field{
+			Type:    GfCmsCategoryType,
+			Args:    gql.NewArgInput(GfCmsCategoryInput),
 			Resolve: saveDataCategory,
 		},
-		"delDataCategory": &graphql.Field{
-			Type: graphql.Boolean,
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+		"delCmsCategory": &graphql.Field{
+			Type:    graphql.Boolean,
+			Args:    gql.NewArgId(),
 			Resolve: delDataCategory,
 		},
 	},
@@ -64,82 +52,34 @@ func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	}
 	fmt.Printf("save category, %+v", item)
 
-	return mgo.DictCategoryRepo.Save(item)
+	return mgo.CmsCategoryRepo.Save(item)
 }
 
 func dataCategories(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
-	return mgo.DictCategoryRepo.All()
+	return mgo.CmsCategoryRepo.All()
 }
 
 func dataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.DictCategoryRepo.Get(id)
+	return mgo.CmsCategoryRepo.Get(id)
 }
 
 func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.DictCategoryRepo.Del(id)
+	return mgo.CmsCategoryRepo.Del(id)
 }
 
-var GfDataCategoryType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfDataCategory",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-		},
-		"pid": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"slug": &graphql.Field{
-			Type: graphql.String,
-		},
-		"mpath": &graphql.Field{
-			Type: graphql.String,
-		},
-		"note": &graphql.Field{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"createdAt": &graphql.Field{
-			Type: graphql.String,
-		},
-		"createdBy": &graphql.Field{
-			Type: graphql.String,
-		},
-		// "locale": &graphql.Field{
-		// 	Type: graphql.String,
-		// },
-	},
+var GfCmsCategoryType = gql.NewObjectTree("GftCmsCategory", gql.FieldsConfig{
+	Strings:        []string{"pid", "name", "mpath", "note", "createdBy"},
+	NonNullStrings: []string{},
+	Floats:         []string{"sortOrder"},
 })
 
-var GfDataCategoryInput = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "GfDataCategoryInput",
-	Fields: graphql.InputObjectConfigFieldMap{
-		"id": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"pid": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"name": &graphql.InputObjectFieldConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-		"slug": &graphql.InputObjectFieldConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-		"note": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.InputObjectFieldConfig{
-			Type: graphql.Float,
-		},
-	},
+var GfCmsCategoryInput = gql.NewInputObject("GftCmsCategoryInput", gql.FieldsConfig{
+	Strings:        []string{"id", "pid", "note"},
+	NonNullStrings: []string{"name", "slug"},
+	Floats:         []string{"sortOrder"},
 })
