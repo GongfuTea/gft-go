@@ -63,6 +63,8 @@ func dataCategories(p graphql.ResolveParams) (interface{}, error) {
 func dataCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
+	fmt.Printf("dataCategory category id, %+v", id)
+
 	return mgo.CmsCategoryRepo.Get(id)
 }
 
@@ -73,7 +75,7 @@ func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
 }
 
 var GfCmsCategoryType = gql.NewObjectTree("GftCmsCategory", gql.FieldsConfig{
-	Strings:        []string{"pid", "name", "mpath", "note", "createdBy"},
+	Strings:        []string{"name", "note", "createdBy"},
 	NonNullStrings: []string{},
 	Floats:         []string{"sortOrder"},
 })

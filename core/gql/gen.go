@@ -77,6 +77,14 @@ func NewObjectTree(name string, fields FieldsConfig) *graphql.Object {
 
 	obj := NewObject(name, fields)
 
+	obj.AddFieldConfig("pid", &graphql.Field{
+		Type: graphql.String,
+		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			source, _ := p.Source.(db.IDbTreeEntity)
+			return source.PID(), nil
+		},
+	})
+
 	obj.AddFieldConfig("slug", &graphql.Field{
 		Type: graphql.String,
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -85,6 +93,13 @@ func NewObjectTree(name string, fields FieldsConfig) *graphql.Object {
 		},
 	})
 
+	obj.AddFieldConfig("mpath", &graphql.Field{
+		Type: graphql.String,
+		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			source, _ := p.Source.(db.IDbTreeEntity)
+			return source.GetMpath(), nil
+		},
+	})
 	return obj
 
 }

@@ -30,7 +30,7 @@ func (repo MgoTreeRepo) Save(m types.IEntity) (types.IEntity, error) {
 			}
 		}
 	} else {
-		fmt.Printf("save category, %#v", model)
+		fmt.Printf("save category, %#v\n", model)
 
 		model.SetMpath(model.GetSlug() + ".")
 	}

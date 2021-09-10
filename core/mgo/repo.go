@@ -30,8 +30,8 @@ func (repo MgoRepo) Get(id string) (types.IEntity, error) {
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
-	if err := repo.Coll().FindOne(ctx, bson.M{"_id": id}).Decode(&result); err != nil {
-		return nil, fmt.Errorf("not found")
+	if err := repo.Coll().FindOne(ctx, bson.M{"_id": id}).Decode(result); err != nil {
+		return nil, fmt.Errorf("not found, %#V", err)
 	}
 
 	return result, nil

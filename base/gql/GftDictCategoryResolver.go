@@ -74,7 +74,7 @@ func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
 }
 
 var GfDataCategoryType = gql.NewObjectTree("GfDataCategory", gql.FieldsConfig{
-	Strings:        []string{"pid", "name", "mpath", "note", "createdBy"},
+	Strings:        []string{"name", "note", "createdBy"},
 	NonNullStrings: []string{},
 	Floats:         []string{"sortOrder"},
 })
