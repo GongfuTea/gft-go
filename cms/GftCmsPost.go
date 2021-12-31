@@ -13,6 +13,7 @@ type GftCmsPost struct {
 	Content      string   `bson:"content" json:"content"`
 	State        string   `bson:"state" json:"state"`
 	Type         string   `bson:"type" json:"type"`
+	ContentType  string   `bson:"contentType" json:"contentType"`
 	Note         string   `bson:"note" json:"note"`
 	CategoryIds  []string `bson:"categoryIds" json:"categoryIds"`
 	CreatedBy    string   `bson:"createdBy,omitempty" json:"createdBy,omitempty"`

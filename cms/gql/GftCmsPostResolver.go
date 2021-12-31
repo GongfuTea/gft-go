@@ -74,14 +74,14 @@ func delDataPost(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.CmsPostRepo.Del(id)
 }
 
-var GfCmsPostType = gql.NewObjectTree("GftCmsPost", gql.FieldsConfig{
-	Strings:        []string{"title", "subTitle", "note", "createdAt", "createdBy", "type", "state"},
-	NonNullStrings: []string{},
-	Floats:         []string{"sortOrder"},
-})
+var GfCmsPostType = gql.NewObjBuilder("GftCmsPost").
+	AddEntityFields().AddEntityTreeFields().
+	AddString("title", "subTitle", "content", "note", "createdAt", "createdBy", "type", "state").
+	AddStringList("categoryIds").
+	AddFloat("sortOrder").GetObj()
 
-var GfCmsPostInput = gql.NewInputObject("GftCmsPostInput", gql.FieldsConfig{
-	Strings:        []string{"id", "note", "subTitle", "content", "type", "state"},
-	NonNullStrings: []string{"title", "slug"},
-	Floats:         []string{"sortOrder"},
-})
+var GfCmsPostInput = gql.NewInputObjBuilder("GftCmsPostInput").
+	AddString("id", "note", "subTitle", "content", "type", "state").
+	AddNonNullString("title", "slug").
+	AddStringList("categoryIds").
+	AddFloat("sortOrder").GetObj()
