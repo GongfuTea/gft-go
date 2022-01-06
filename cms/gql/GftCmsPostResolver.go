@@ -81,7 +81,7 @@ var GfCmsPostType = gql.NewObjBuilder("GftCmsPost").
 	AddFloat("sortOrder").GetObj()
 
 var GfCmsPostInput = gql.NewInputObjBuilder("GftCmsPostInput").
-	AddString("id", "note", "subTitle", "content", "type", "state").
-	AddNonNullString("title", "slug").
+	AddString("id", "note", "subTitle", "content", "type", "state", "slug").
+	AddNonNullString("title").
 	AddStringList("categoryIds").
 	AddFloat("sortOrder").GetObj()
