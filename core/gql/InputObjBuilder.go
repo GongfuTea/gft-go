@@ -38,6 +38,10 @@ func (ob *InputObjBuilder) AddInt(fields ...string) *InputObjBuilder {
 	return ob.AddField(graphql.Int, fields...)
 }
 
+func (ob *InputObjBuilder) AddDateTime(fields ...string) *InputObjBuilder {
+	return ob.AddField(graphql.DateTime, fields...)
+}
+
 func (ob *InputObjBuilder) AddField(t graphql.Input, fields ...string) *InputObjBuilder {
 	for _, f := range fields {
 		fmt.Println("input:", f)

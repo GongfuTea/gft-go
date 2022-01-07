@@ -41,6 +41,10 @@ func (ob *ObjBuilder) AddInt(fields ...string) *ObjBuilder {
 	return ob.AddField(graphql.Int, fields...)
 }
 
+func (ob *ObjBuilder) AddDateTime(fields ...string) *ObjBuilder {
+	return ob.AddField(graphql.DateTime, fields...)
+}
+
 func (ob *ObjBuilder) AddField(t graphql.Output, fields ...string) *ObjBuilder {
 	for _, f := range fields {
 		fmt.Println("ob:", f)
