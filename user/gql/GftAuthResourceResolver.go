@@ -84,65 +84,20 @@ func delAuthResource(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.AuthResourceRepo.Del(id)
 }
 
-var GfAuthResourceType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfAuthResource",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-		},
-		"pid": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"slug": &graphql.Field{
-			Type: graphql.String,
-		},
-		"operations": &graphql.Field{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"createdAt": &graphql.Field{
-			Type: graphql.String,
-		},
-	},
-})
+var GfAuthResourceType = gql.NewObjBuilder("GfAuthResource").
+	AddEntityFields().AddEntityTreeFields().
+	AddString("name").
+	AddField(graphql.NewList(GfAuthOperationType), "operations").
+	AddFloat("sortOrder").GetObj()
 
-var GfAuthResourceInput = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "GfAuthResourceInput",
-	Fields: graphql.InputObjectConfigFieldMap{
-		"id": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"pid": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"name": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"slug": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"operations": &graphql.InputObjectFieldConfig{
-			Type: graphql.String,
-		},
-		"sortOrder": &graphql.InputObjectFieldConfig{
-			Type: graphql.Float,
-		},
-	},
-})
+var GfAuthResourceInput = gql.NewInputObjBuilder("GfAuthResourceInput").
+	AddString("id", "pid", "code").
+	AddNonNullString("name").
+	AddField(graphql.NewList(GfAuthOperationInput), "operations").
+	AddFloat("sortOrder").GetObj()
 
-var GfAuthOperationType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "GfAuthOperation",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"slug": &graphql.Field{
-			Type: graphql.String,
-		},
-	},
-})
+var GfAuthOperationType = gql.NewObjBuilder("GfAuthOperation").
+	AddNonNullString("name", "code").GetObj()
+
+var GfAuthOperationInput = gql.NewInputObjBuilder("GfAuthOperationInput").
+	AddNonNullString("name", "code").GetObj()

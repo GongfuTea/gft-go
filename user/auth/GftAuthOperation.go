@@ -2,5 +2,5 @@ package auth
 
 type GftAuthOperation struct {
 	Name string `bson:"name" json:"name"`
-	Slug string `bson:"slug" json:"slug"`
+	Code string `bson:"code" json:"code"`
 }

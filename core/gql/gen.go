@@ -85,11 +85,11 @@ func NewObjectTree(name string, fields FieldsConfig) *graphql.Object {
 		},
 	})
 
-	obj.AddFieldConfig("slug", &graphql.Field{
+	obj.AddFieldConfig("code", &graphql.Field{
 		Type: graphql.String,
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			source, _ := p.Source.(db.IDbTreeEntity)
-			return source.GetSlug(), nil
+			return source.GetCode(), nil
 		},
 	})
 

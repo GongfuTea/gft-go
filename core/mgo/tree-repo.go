@@ -26,13 +26,13 @@ func (repo MgoTreeRepo) Save(m types.IEntity) (types.IEntity, error) {
 		parent, err := repo.MgoRepo.Get(model.PID())
 		if err == nil {
 			if tree, ok := parent.(types.ITreeEntity); ok {
-				model.SetMpath(tree.GetMpath() + model.GetSlug() + ".")
+				model.SetMpath(tree.GetMpath() + model.GetCode() + ".")
 			}
 		}
 	} else {
 		fmt.Printf("save category, %#v\n", model)
 
-		model.SetMpath(model.GetSlug() + ".")
+		model.SetMpath(model.GetCode() + ".")
 	}
 	return repo.MgoRepo.Save(model)
 

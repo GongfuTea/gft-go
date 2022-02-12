@@ -3,7 +3,7 @@ package types
 type ITreeEntity interface {
 	IEntity
 	PID() string
-	GetSlug() string
+	GetCode() string
 	HasPid() bool
 	SetMpath(mpath string)
 	GetMpath() string
@@ -12,7 +12,7 @@ type ITreeEntity interface {
 type TreeEntity struct {
 	*Entity `bson:",inline"`
 	Pid     string `bson:"pid,omitempty" json:"pid,omitempty"`
-	Slug    string `bson:"slug" json:"slug,omitempty"`
+	Code    string `bson:"code" json:"code,omitempty"`
 	Mpath   string `bson:"mpath" json:"mpath,omitempty"`
 }
 
@@ -20,8 +20,8 @@ func (e TreeEntity) PID() string {
 	return e.Pid
 }
 
-func (e TreeEntity) GetSlug() string {
-	return e.Slug
+func (e TreeEntity) GetCode() string {
+	return e.Code
 }
 
 func (e TreeEntity) GetMpath() string {

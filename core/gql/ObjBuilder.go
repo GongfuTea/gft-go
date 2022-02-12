@@ -82,15 +82,23 @@ func (ob *ObjBuilder) AddEntityTreeFields() *ObjBuilder {
 		Type: graphql.String,
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			source, _ := p.Source.(db.IDbTreeEntity)
+			if source == nil {
+				return nil, nil
+			}
 			return source.PID(), nil
 		},
 	})
 
-	ob.Obj.AddFieldConfig("slug", &graphql.Field{
+	ob.Obj.AddFieldConfig("code", &graphql.Field{
 		Type: graphql.String,
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			fmt.Printf("tree code, %+v\n", p.Source)
+
 			source, _ := p.Source.(db.IDbTreeEntity)
-			return source.GetSlug(), nil
+			if source == nil {
+				return nil, nil
+			}
+			return source.GetCode(), nil
 		},
 	})
 

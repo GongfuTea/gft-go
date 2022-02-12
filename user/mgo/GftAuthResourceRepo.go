@@ -11,11 +11,11 @@ import (
 )
 
 type GftAuthResourceRepo struct {
-	*mgo.MgoRepo
+	*mgo.MgoTreeRepo
 }
 
 var AuthResourceRepo = &GftAuthResourceRepo{
-	mgo.NewMgoRepo("GftAuthResource", auth.NewGftAuthResource),
+	mgo.NewMgoTreeRepo("GftAuthResource", auth.NewGftAuthResource),
 }
 
 // func (repo GftAuthResourceRepo) Save(model auth.GftAuthResource) (*auth.GftAuthResource, error) {
