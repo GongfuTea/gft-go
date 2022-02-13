@@ -16,33 +16,33 @@ type GftDictCategoryResolver struct {
 
 var DictCategoryResolver = &GftDictCategoryResolver{
 	Query: graphql.Fields{
-		"dataCategories": &graphql.Field{
-			Type:    graphql.NewList(GfDataCategoryType),
+		"dictCategories": &graphql.Field{
+			Type:    graphql.NewList(GfDictCategoryType),
 			Args:    graphql.FieldConfigArgument{},
-			Resolve: dataCategories,
+			Resolve: dictCategories,
 		},
-		"dataCategory": &graphql.Field{
-			Type:    GfDataCategoryType,
+		"dictCategory": &graphql.Field{
+			Type:    GfDictCategoryType,
 			Args:    gql.NewArgId(),
-			Resolve: dataCategory,
+			Resolve: dictCategory,
 		},
 	},
 
 	Mutation: graphql.Fields{
-		"saveDataCategory": &graphql.Field{
-			Type:    GfDataCategoryType,
-			Args:    gql.NewArgInput(GfDataCategoryInput),
-			Resolve: saveDataCategory,
+		"saveDictCategory": &graphql.Field{
+			Type:    GfDictCategoryType,
+			Args:    gql.NewArgInput(GfDictCategoryInput),
+			Resolve: saveDictCategory,
 		},
-		"delDataCategory": &graphql.Field{
+		"delDictCategory": &graphql.Field{
 			Type:    graphql.Boolean,
 			Args:    gql.NewArgId(),
-			Resolve: delDataCategory,
+			Resolve: delDictCategory,
 		},
 	},
 }
 
-func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
+func saveDictCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
 	item, err := gql.GqlParseInput(p, base.NewGftDictCategory())
@@ -56,31 +56,29 @@ func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.DictCategoryRepo.Save(item)
 }
 
-func dataCategories(p graphql.ResolveParams) (interface{}, error) {
+func dictCategories(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	return mgo.DictCategoryRepo.All()
 }
 
-func dataCategory(p graphql.ResolveParams) (interface{}, error) {
+func dictCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	return mgo.DictCategoryRepo.Get(id)
 }
 
-func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
+func delDictCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	return mgo.DictCategoryRepo.Del(id)
 }
 
-var GfDataCategoryType = gql.NewObjectTree("GfDataCategory", gql.FieldsConfig{
-	Strings:        []string{"name", "note", "createdBy"},
-	NonNullStrings: []string{},
-	Floats:         []string{"sortOrder"},
-})
+var GfDictCategoryType = gql.NewObjBuilder("GfDictCategory").
+	AddEntityTreeFields().
+	AddString("name", "note").
+	AddFloat("sortOrder").GetObj()
 
-var GfDataCategoryInput = gql.NewInputObject("GfDataCategoryInput", gql.FieldsConfig{
-	Strings:        []string{"id", "pid", "note"},
-	NonNullStrings: []string{"name", "slug"},
-	Floats:         []string{"sortOrder"},
-})
+var GfDictCategoryInput = gql.NewInputObjBuilder("GfDictCategoryInput").
+	AddString("id", "pid", "note").
+	AddNonNullString("name", "code").
+	AddFloat("sortOrder").GetObj()

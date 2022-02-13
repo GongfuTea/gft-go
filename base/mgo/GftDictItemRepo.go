@@ -5,10 +5,10 @@ import (
 	"github.com/GongfuTea/gft-go/core/mgo"
 )
 
-type GftDictRepo struct {
+type GftDictItemRepo struct {
 	*mgo.MgoRepo
 }
 
-var DictRepo = &GftDictRepo{
-	mgo.NewMgoRepo("GftDict", base.NewGftDict),
+var DictItemRepo = &GftDictItemRepo{
+	mgo.NewMgoRepo("GftDictItem", base.NewGftDictItem),
 }

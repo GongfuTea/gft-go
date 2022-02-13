@@ -9,15 +9,15 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-type GftDictResolver struct {
+type GftDictItemResolver struct {
 	Query    graphql.Fields
 	Mutation graphql.Fields
 }
 
-var DictResolver = &GftDictResolver{
+var DictItemResolver = &GftDictItemResolver{
 	Query: graphql.Fields{
-		"dataDicts": &graphql.Field{
-			Type: graphql.NewList(GfDataDictType),
+		"dictItems": &graphql.Field{
+			Type: graphql.NewList(GfDictItemType),
 			Args: graphql.FieldConfigArgument{
 				"categoryId": &graphql.ArgumentConfig{
 					Type: graphql.String,
@@ -25,20 +25,20 @@ var DictResolver = &GftDictResolver{
 			},
 			Resolve: DataDicts,
 		},
-		"dataDict": &graphql.Field{
-			Type:    GfDataDictType,
+		"dictItem": &graphql.Field{
+			Type:    GfDictItemType,
 			Args:    gql.NewArgId(),
 			Resolve: DataDict,
 		},
 	},
 
 	Mutation: graphql.Fields{
-		"saveDataDict": &graphql.Field{
-			Type:    GfDataDictType,
-			Args:    gql.NewArgInput(GfDataDictInput),
+		"saveDictItem": &graphql.Field{
+			Type:    GfDictItemType,
+			Args:    gql.NewArgInput(GfDictItemInput),
 			Resolve: saveDataDict,
 		},
-		"delDataDict": &graphql.Field{
+		"delDictItem": &graphql.Field{
 			Type:    graphql.Boolean,
 			Args:    gql.NewArgId(),
 			Resolve: delDataDict,
@@ -49,42 +49,41 @@ var DictResolver = &GftDictResolver{
 func saveDataDict(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, base.NewGftDict())
+	item, err := gql.GqlParseInput(p, base.NewGftDictItem())
 	if err != nil {
 		fmt.Printf("save dict err, %+v", err)
 	}
 
-	return mgo.DictRepo.Save(item)
+	return mgo.DictItemRepo.Save(item)
 
 }
 
 func DataDicts(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	// categoryId := p.Args["categoryId"].(string)
-	return mgo.DictRepo.All()
+	return mgo.DictItemRepo.All()
 }
 
 func DataDict(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.DictRepo.Get(id)
+	return mgo.DictItemRepo.Get(id)
 }
 
 func delDataDict(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.DictRepo.Del(id)
+	return mgo.DictItemRepo.Del(id)
 }
 
-var GfDataDictType = gql.NewObject("GfDataDict", gql.FieldsConfig{
-	Strings:        []string{"categoryId", "name", "code", "nickname", "note"},
-	NonNullStrings: []string{},
-	Floats:         []string{"sortOrder"},
-	Ints:           []string{"level"},
-})
+var GfDictItemType = gql.NewObjBuilder("GfDictItem").
+	AddEntityFields().
+	AddString("categoryId", "name", "code", "nickname", "note").
+	AddInt("level").
+	AddFloat("sortOrder").GetObj()
 
-var GfDataDictInput = gql.NewInputObject("GfDataDictInput", gql.FieldsConfig{
-	Strings:        []string{"id", "categoryId", "nickname", "note"},
-	NonNullStrings: []string{"name", "code"},
-	Floats:         []string{"sortOrder"},
-})
+var GfDictItemInput = gql.NewInputObjBuilder("GfDictItemInput").
+	AddString("id", "pid", "categoryId", "nickname", "note").
+	AddNonNullString("name", "code").
+	AddInt("level").
+	AddFloat("sortOrder").GetObj()

@@ -85,13 +85,13 @@ func delAuthResource(p graphql.ResolveParams) (interface{}, error) {
 }
 
 var GfAuthResourceType = gql.NewObjBuilder("GfAuthResource").
-	AddEntityFields().AddEntityTreeFields().
-	AddString("name").
+	AddEntityTreeFields().
+	AddString("name", "category").
 	AddField(graphql.NewList(GfAuthOperationType), "operations").
 	AddFloat("sortOrder").GetObj()
 
 var GfAuthResourceInput = gql.NewInputObjBuilder("GfAuthResourceInput").
-	AddString("id", "pid", "code").
+	AddString("id", "pid", "code", "category").
 	AddNonNullString("name").
 	AddField(graphql.NewList(GfAuthOperationInput), "operations").
 	AddFloat("sortOrder").GetObj()

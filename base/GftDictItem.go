@@ -5,7 +5,7 @@ import (
 	"github.com/GongfuTea/gft-go/types"
 )
 
-type GftDict struct {
+type GftDictItem struct {
 	*db.DbEntity `bson:",inline"`
 	CategoryId   string  `bson:"categoryId" json:"categoryId"`
 	Code         string  `bson:"code" json:"code"`
@@ -18,8 +18,8 @@ type GftDict struct {
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
-func NewGftDict() types.IEntity {
-	return &GftDict{
+func NewGftDictItem() types.IEntity {
+	return &GftDictItem{
 		DbEntity: db.NewDbEntity(),
 	}
 }

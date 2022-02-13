@@ -82,6 +82,6 @@ var GfCmsCategoryType = gql.NewObjectTree("GftCmsCategory", gql.FieldsConfig{
 
 var GfCmsCategoryInput = gql.NewInputObject("GftCmsCategoryInput", gql.FieldsConfig{
 	Strings:        []string{"id", "pid", "note"},
-	NonNullStrings: []string{"name", "slug"},
+	NonNullStrings: []string{"name", "code"},
 	Floats:         []string{"sortOrder"},
 })

@@ -9,7 +9,7 @@ func QueryFields() graphql.Fields {
 	for k, v := range DictCategoryResolver.Query {
 		fields[k] = v
 	}
-	for k, v := range DictResolver.Query {
+	for k, v := range DictItemResolver.Query {
 		fields[k] = v
 	}
 	return fields
@@ -20,7 +20,7 @@ func MutationFields() graphql.Fields {
 	for k, v := range DictCategoryResolver.Mutation {
 		fields[k] = v
 	}
-	for k, v := range DictResolver.Mutation {
+	for k, v := range DictItemResolver.Mutation {
 		fields[k] = v
 	}
 	return fields

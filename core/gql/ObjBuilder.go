@@ -77,7 +77,7 @@ func (ob *ObjBuilder) AddEntityFields() *ObjBuilder {
 }
 
 func (ob *ObjBuilder) AddEntityTreeFields() *ObjBuilder {
-
+	ob.AddEntityFields()
 	ob.Obj.AddFieldConfig("pid", &graphql.Field{
 		Type: graphql.String,
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
