@@ -24,3 +24,13 @@ func GqlParseInput(p graphql.ResolveParams, input types.IEntity) (output types.I
 	err = json.Unmarshal(data, &input)
 	return input, err
 }
+
+func MergeFields(list ...graphql.Fields) graphql.Fields {
+	var fields = graphql.Fields{}
+	for _, items := range list {
+		for k, v := range items {
+			fields[k] = v
+		}
+	}
+	return fields
+}
