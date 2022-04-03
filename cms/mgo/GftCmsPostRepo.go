@@ -6,7 +6,7 @@ import (
 )
 
 type GftCmsPostRepo struct {
-	*mgo.MgoRepo
+	*mgo.MgoRepo[*cms.GftCmsPost]
 }
 
 var CmsPostRepo = &GftCmsPostRepo{

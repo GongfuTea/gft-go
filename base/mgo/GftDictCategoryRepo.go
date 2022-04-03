@@ -6,7 +6,7 @@ import (
 )
 
 type GftDictCategoryRepo struct {
-	*mgo.MgoTreeRepo
+	*mgo.MgoTreeRepo[*base.GftDictCategory]
 }
 
 var DictCategoryRepo = &GftDictCategoryRepo{

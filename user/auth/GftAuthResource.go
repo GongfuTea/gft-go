@@ -2,7 +2,6 @@ package auth
 
 import (
 	"github.com/GongfuTea/gft-go/core/db"
-	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftAuthResource struct {
@@ -14,7 +13,7 @@ type GftAuthResource struct {
 	CreatedBy        string             `bson:"createdBy,omitempty" json:"createdBy,omitempty"`
 }
 
-func NewGftAuthResource() types.IEntity {
+func NewGftAuthResource() *GftAuthResource {
 	return &GftAuthResource{
 		DbTreeEntity: db.NewDbTreeEntity(),
 	}

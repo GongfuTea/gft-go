@@ -29,8 +29,7 @@ func (e TreeEntity) GetMpath() string {
 }
 
 func (e TreeEntity) HasPid() bool {
-	isNew := e.Pid == ""
-	return isNew
+	return e.Pid != ""
 }
 
 func (e *TreeEntity) SetMpath(mpath string) {

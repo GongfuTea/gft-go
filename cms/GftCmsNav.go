@@ -2,7 +2,6 @@ package cms
 
 import (
 	"github.com/GongfuTea/gft-go/core/db"
-	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftCmsNav struct {
@@ -18,7 +17,7 @@ type GftCmsNav struct {
 	NewWindow        bool        `bson:"newWindow" json:"newWindow"`
 }
 
-func NewGftCmsNav() types.IEntity {
+func NewGftCmsNav() *GftCmsNav {
 	return &GftCmsNav{
 		DbTreeEntity: db.NewDbTreeEntity(),
 	}

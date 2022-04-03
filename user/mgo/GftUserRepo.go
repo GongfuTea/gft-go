@@ -14,13 +14,11 @@ import (
 )
 
 type GftUserRepo struct {
-	*mgo.MgoRepo
+	*mgo.MgoRepo[*user.GftUser]
 }
 
 var UserRepo = &GftUserRepo{
-	&mgo.MgoRepo{
-		Name: "GftUser",
-	},
+	mgo.NewMgoRepo("GftUser", user.NewGftUser),
 }
 
 func (repo GftUserRepo) Create(username string, password string) (*user.GftUser, error) {

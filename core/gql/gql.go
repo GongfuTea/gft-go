@@ -16,8 +16,8 @@ func GqlMustLogin(p graphql.ResolveParams) {
 
 }
 
-func GqlParseInput(p graphql.ResolveParams, input types.IEntity) (output types.IEntity, err error) {
-	args := p.Args["input"].(map[string]interface{})
+func GqlParseInput[T types.IEntity](p graphql.ResolveParams, input T) (output T, err error) {
+	args := p.Args["input"].(map[string]any)
 	data, _ := json.Marshal(args)
 	// fmt.Printf("save category, %+v", args)
 

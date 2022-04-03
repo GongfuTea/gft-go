@@ -6,7 +6,7 @@ import (
 )
 
 type GftCmsCategoryRepo struct {
-	*mgo.MgoTreeRepo
+	*mgo.MgoTreeRepo[*cms.GftCmsCategory]
 }
 
 var CmsCategoryRepo = &GftCmsCategoryRepo{

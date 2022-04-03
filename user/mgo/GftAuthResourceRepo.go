@@ -11,7 +11,7 @@ import (
 )
 
 type GftAuthResourceRepo struct {
-	*mgo.MgoTreeRepo
+	*mgo.MgoTreeRepo[*auth.GftAuthResource]
 }
 
 var AuthResourceRepo = &GftAuthResourceRepo{

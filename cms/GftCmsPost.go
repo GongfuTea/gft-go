@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/GongfuTea/gft-go/core/db"
-	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftCmsPost struct {
@@ -27,7 +26,7 @@ type GftCmsPost struct {
 	NewWindow    bool        `bson:"newWindow" json:"newWindow"`
 }
 
-func NewGftCmsPost() types.IEntity {
+func NewGftCmsPost() *GftCmsPost {
 	return &GftCmsPost{
 		DbEntity: db.NewDbEntity(),
 	}

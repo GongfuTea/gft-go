@@ -12,33 +12,33 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type MgoRepo struct {
+type MgoRepo[T types.IEntity] struct {
 	Name    string
-	factory func() types.IEntity
+	factory func() T
 }
 
-func NewMgoRepo(name string, factory func() types.IEntity) *MgoRepo {
-	return &MgoRepo{Name: name, factory: factory}
+func NewMgoRepo[T types.IEntity](name string, factory func() T) *MgoRepo[T] {
+	return &MgoRepo[T]{Name: name, factory: factory}
 }
 
-func (repo MgoRepo) Coll() *mongo.Collection {
+func (repo MgoRepo[T]) Coll() *mongo.Collection {
 	return DefaultMongo.Collection(repo.Name)
 }
 
-func (repo MgoRepo) Get(id string) (types.IEntity, error) {
+func (repo MgoRepo[T]) Get(id string) (T, error) {
 	result := repo.factory()
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
 	if err := repo.Coll().FindOne(ctx, bson.M{"_id": id}).Decode(result); err != nil {
-		return nil, fmt.Errorf("not found, %#V", err)
+		return *new(T), fmt.Errorf("not found, %#V", err)
 	}
 
 	return result, nil
 }
 
-func (repo MgoRepo) All() ([]types.IEntity, error) {
-	var results []types.IEntity
+func (repo MgoRepo[T]) All() ([]T, error) {
+	var results []T
 	var err error
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
@@ -64,7 +64,7 @@ func (repo MgoRepo) All() ([]types.IEntity, error) {
 	return results, nil
 }
 
-func (repo MgoRepo) Save(model types.IEntity) (types.IEntity, error) {
+func (repo MgoRepo[T]) Save(model T) (T, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
 	fmt.Printf("MgoRepo Save, %#v\n", model)
@@ -82,7 +82,7 @@ func (repo MgoRepo) Save(model types.IEntity) (types.IEntity, error) {
 	return model, err
 }
 
-func (repo MgoRepo) Del(id string) (bool, error) {
+func (repo MgoRepo[T]) Del(id string) (bool, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
 	q := bson.M{"_id": id}

@@ -6,7 +6,7 @@ import (
 )
 
 type GftDictItemRepo struct {
-	*mgo.MgoRepo
+	*mgo.MgoRepo[*base.GftDictItem]
 }
 
 var DictItemRepo = &GftDictItemRepo{

@@ -7,10 +7,10 @@ import (
 
 func QueryFields() graphql.Fields {
 
-	return gql.MergeFields(GsYxsResolver.Query)
+	return gql.MergeFields(GsYxsResolver.Query, GsZydmResolver.Query)
 }
 
 func MutationFields() graphql.Fields {
 
-	return gql.MergeFields(GsYxsResolver.Mutation)
+	return gql.MergeFields(GsYxsResolver.Mutation, GsZydmResolver.Mutation)
 }

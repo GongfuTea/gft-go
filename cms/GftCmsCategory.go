@@ -2,7 +2,6 @@ package cms
 
 import (
 	"github.com/GongfuTea/gft-go/core/db"
-	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftCmsCategory struct {
@@ -15,7 +14,7 @@ type GftCmsCategory struct {
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
-func NewGftCmsCategory() types.IEntity {
+func NewGftCmsCategory() *GftCmsCategory {
 	return &GftCmsCategory{
 		DbTreeEntity: db.NewDbTreeEntity(),
 	}

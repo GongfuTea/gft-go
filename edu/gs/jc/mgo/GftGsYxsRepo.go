@@ -6,7 +6,7 @@ import (
 )
 
 type GftGsYxsRepo struct {
-	*mgo.MgoTreeRepo
+	*mgo.MgoTreeRepo[*jc.GftGsYxs]
 }
 
 var GsYxsRepo = &GftGsYxsRepo{

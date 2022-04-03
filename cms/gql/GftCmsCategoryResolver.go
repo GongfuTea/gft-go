@@ -42,7 +42,7 @@ var CmsCategoryResolver = &GftCmsCategoryResolver{
 	},
 }
 
-func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
+func saveDataCategory(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 
 	item, err := gql.GqlParseInput(p, cms.NewGftCmsCategory())
@@ -55,12 +55,12 @@ func saveDataCategory(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.CmsCategoryRepo.Save(item)
 }
 
-func dataCategories(p graphql.ResolveParams) (interface{}, error) {
+func dataCategories(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	return mgo.CmsCategoryRepo.All()
 }
 
-func dataCategory(p graphql.ResolveParams) (interface{}, error) {
+func dataCategory(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	fmt.Printf("dataCategory category id, %+v", id)
@@ -68,7 +68,7 @@ func dataCategory(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.CmsCategoryRepo.Get(id)
 }
 
-func delDataCategory(p graphql.ResolveParams) (interface{}, error) {
+func delDataCategory(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	return mgo.CmsCategoryRepo.Del(id)

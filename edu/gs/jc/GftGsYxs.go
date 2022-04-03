@@ -2,7 +2,6 @@ package jc
 
 import (
 	"github.com/GongfuTea/gft-go/core/db"
-	"github.com/GongfuTea/gft-go/types"
 )
 
 type GftGsYxs struct {
@@ -15,7 +14,7 @@ type GftGsYxs struct {
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
-func NewGftGsYxs() types.IEntity {
+func NewGftGsYxs() *GftGsYxs {
 	return &GftGsYxs{
 		DbTreeEntity: db.NewDbTreeEntity(),
 	}
