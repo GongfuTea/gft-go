@@ -49,8 +49,6 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 		elem := new(T)
 		err = cur.Decode(elem)
 
-		jsonx.PrintAsJson(elem)
-
 		if err != nil {
 			return nil, err
 		}
@@ -66,15 +64,13 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 func (repo MgoRepo[T]) Save(model T) (T, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
-	fmt.Printf("MgoRepo Save, %#v\n", model)
 
-	jsonx.PrintAsJson(model)
+	jsonx.PrintAsJson("MgoRepo Save", model)
 	if repo.IsExist(model.ID()) {
 		q2 := bson.M{"$set": model}
 		_, err = repo.Coll().UpdateByID(ctx, model.ID(), q2)
 	} else {
 		model.Init()
-		jsonx.PrintAsJson(model)
 		_, err = repo.Coll().InsertOne(ctx, model)
 	}
 
@@ -101,5 +97,6 @@ func (repo MgoRepo[T]) IsExist(id string) bool {
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	result := repo.Coll().FindOne(ctx, bson.M{"_id": id})
+
 	return result.Err() == nil
 }

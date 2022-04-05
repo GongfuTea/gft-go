@@ -21,7 +21,9 @@ func (e Entity) ID() string {
 
 func (e *Entity) Init() {
 
-	e.Id = uuid.NewString()
+	if e.Id == "" {
+		e.Id = uuid.NewString()
+	}
 
 	fmt.Printf("init Entity, %+v\n", e)
 

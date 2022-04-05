@@ -5,12 +5,11 @@ import (
 	"fmt"
 )
 
-func PrintAsJson(data any) {
+func PrintAsJson(label string, data any) {
 	e, err := json.Marshal(data)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(label, err)
 		return
 	}
-	fmt.Println("-----------------")
-	fmt.Println(string(e))
+	fmt.Println(label, string(e))
 }
