@@ -45,7 +45,7 @@ var GsZydmResolver = &GftGsZydmResolver{
 func saveGsZydm(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, jc.NewGftGsZydm())
+	item, err := gql.GqlParseInput(p, new(jc.GftGsZydm))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)

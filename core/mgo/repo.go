@@ -13,12 +13,11 @@ import (
 )
 
 type MgoRepo[T types.IEntity] struct {
-	Name    string
-	factory func() T
+	Name string
 }
 
-func NewMgoRepo[T types.IEntity](name string, factory func() T) *MgoRepo[T] {
-	return &MgoRepo[T]{Name: name, factory: factory}
+func NewMgoRepo[T types.IEntity](name string) *MgoRepo[T] {
+	return &MgoRepo[T]{Name: name}
 }
 
 func (repo MgoRepo[T]) Coll() *mongo.Collection {
@@ -26,7 +25,7 @@ func (repo MgoRepo[T]) Coll() *mongo.Collection {
 }
 
 func (repo MgoRepo[T]) Get(id string) (T, error) {
-	result := repo.factory()
+	result := *new(T)
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
@@ -47,7 +46,7 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 		return nil, err
 	}
 	for cur.Next(ctx) {
-		elem := repo.factory()
+		elem := new(T)
 		err = cur.Decode(elem)
 
 		jsonx.PrintAsJson(elem)
@@ -55,7 +54,7 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 		if err != nil {
 			return nil, err
 		}
-		results = append(results, elem)
+		results = append(results, *elem)
 	}
 	if err = cur.Err(); err != nil {
 		return nil, err
@@ -70,13 +69,13 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 	fmt.Printf("MgoRepo Save, %#v\n", model)
 
 	jsonx.PrintAsJson(model)
-	if model.IsNew() {
+	if repo.IsExist(model.ID()) {
+		q2 := bson.M{"$set": model}
+		_, err = repo.Coll().UpdateByID(ctx, model.ID(), q2)
+	} else {
 		model.Init()
 		jsonx.PrintAsJson(model)
 		_, err = repo.Coll().InsertOne(ctx, model)
-	} else {
-		q2 := bson.M{"$set": model}
-		_, err = repo.Coll().UpdateByID(ctx, model.ID(), q2)
 	}
 
 	return model, err
@@ -93,4 +92,14 @@ func (repo MgoRepo[T]) Del(id string) (bool, error) {
 	}
 	return true, nil
 
+}
+
+func (repo MgoRepo[T]) IsExist(id string) bool {
+	if id == "" {
+		return false
+	}
+
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	result := repo.Coll().FindOne(ctx, bson.M{"_id": id})
+	return result.Err() == nil
 }

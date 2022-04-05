@@ -13,9 +13,3 @@ type GftCmsCategory struct {
 
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
-
-func NewGftCmsCategory() *GftCmsCategory {
-	return &GftCmsCategory{
-		DbTreeEntity: db.NewDbTreeEntity(),
-	}
-}

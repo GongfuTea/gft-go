@@ -15,9 +15,3 @@ type GftGsZydm struct {
 	Xkmlm        string  `bson:"xkmlm" json:"xkmlm"` // 学科门类
 
 }
-
-func NewGftGsZydm() *GftGsZydm {
-	return &GftGsZydm{
-		DbEntity: db.NewDbEntity(),
-	}
-}

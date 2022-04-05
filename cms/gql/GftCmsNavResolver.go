@@ -45,7 +45,7 @@ var CmsNavResolver = &GftCmsNavResolver{
 func saveCmsNav(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, cms.NewGftCmsNav())
+	item, err := gql.GqlParseInput(p, new(cms.GftCmsNav))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)

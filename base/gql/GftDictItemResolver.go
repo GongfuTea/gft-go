@@ -49,7 +49,7 @@ var DictItemResolver = &GftDictItemResolver{
 func saveDataDict(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, base.NewGftDictItem())
+	item, err := gql.GqlParseInput(p, new(base.GftDictItem))
 	if err != nil {
 		fmt.Printf("save dict err, %+v", err)
 	}

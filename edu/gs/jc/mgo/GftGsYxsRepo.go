@@ -10,5 +10,5 @@ type GftGsYxsRepo struct {
 }
 
 var GsYxsRepo = &GftGsYxsRepo{
-	mgo.NewMgoTreeRepo("GftGsYxs", jc.NewGftGsYxs),
+	mgo.NewMgoTreeRepo[*jc.GftGsYxs]("GftGsYxs"),
 }

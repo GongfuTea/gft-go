@@ -14,8 +14,4 @@ type GftDictCategory struct {
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
-func NewGftDictCategory() *GftDictCategory {
-	return &GftDictCategory{
-		DbTreeEntity: db.NewDbTreeEntity(),
-	}
-}
+ 

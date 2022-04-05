@@ -45,7 +45,7 @@ var CmsPostResolver = &GftCmsPostResolver{
 func saveDataPost(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, cms.NewGftCmsPost())
+	item, err := gql.GqlParseInput(p, new(cms.GftCmsPost))
 
 	if err != nil {
 		fmt.Printf("save Post err, %+v", err)

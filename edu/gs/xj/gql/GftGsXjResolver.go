@@ -45,7 +45,7 @@ var GsXjResolver = &GftGsXjResolver{
 func saveGsXj(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, xj.NewGftGsXj())
+	item, err := gql.GqlParseInput(p, new(xj.GftGsXj))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)

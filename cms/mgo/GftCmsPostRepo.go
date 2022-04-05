@@ -10,5 +10,5 @@ type GftCmsPostRepo struct {
 }
 
 var CmsPostRepo = &GftCmsPostRepo{
-	mgo.NewMgoRepo("GftCmsPost", cms.NewGftCmsPost),
+	mgo.NewMgoRepo[*cms.GftCmsPost]("GftCmsPost"),
 }

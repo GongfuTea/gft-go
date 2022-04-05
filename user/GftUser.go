@@ -18,9 +18,3 @@ type GftUser struct {
 	CreatedBy    string             `bson:"createdBy,omitempty" json:"createdBy,omitempty"`
 	CreatedAt    time.Time          `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
 }
-
-func NewGftUser() *GftUser {
-	return &GftUser{
-		DbEntity: db.NewDbEntity(),
-	}
-}

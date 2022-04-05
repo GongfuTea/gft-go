@@ -6,9 +6,9 @@ import (
 )
 
 type GftGsXjRepo struct {
-	*mgo.MgoRepo
+	*mgo.MgoRepo[*xj.GftGsXj]
 }
 
 var GsXjRepo = &GftGsXjRepo{
-	mgo.NewMgoRepo("GftGsXj", xj.NewGftGsXj),
+	mgo.NewMgoRepo[*xj.GftGsXj]("GftGsXj"),
 }

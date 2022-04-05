@@ -24,9 +24,3 @@ type GftGsXj struct {
 	Note string            `bson:"note" json:"note,omitempty"`
 	Tl   types.GftTimeline `bson:"tl" json:"tl,omitempty"`
 }
-
-func NewGftGsXj() types.IEntity {
-	return &GftGsXj{
-		DbEntity: db.NewDbEntity(),
-	}
-}

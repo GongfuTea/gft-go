@@ -45,7 +45,7 @@ var CmsCategoryResolver = &GftCmsCategoryResolver{
 func saveDataCategory(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, cms.NewGftCmsCategory())
+	item, err := gql.GqlParseInput(p, new(cms.GftCmsCategory))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)

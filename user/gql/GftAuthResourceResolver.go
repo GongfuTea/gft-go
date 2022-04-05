@@ -57,7 +57,7 @@ var AuthResourceResolver = &GftAuthResourceResolver{
 func saveAuthResource(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, auth.NewGftAuthResource())
+	item, err := gql.GqlParseInput(p, new(auth.GftAuthResource))
 
 	if err != nil {
 		fmt.Printf("save resource err, %+v", err)

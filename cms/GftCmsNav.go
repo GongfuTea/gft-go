@@ -16,9 +16,3 @@ type GftCmsNav struct {
 	Note             string      `bson:"note" json:"note"`
 	NewWindow        bool        `bson:"newWindow" json:"newWindow"`
 }
-
-func NewGftCmsNav() *GftCmsNav {
-	return &GftCmsNav{
-		DbTreeEntity: db.NewDbTreeEntity(),
-	}
-}

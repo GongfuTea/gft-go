@@ -10,5 +10,5 @@ type GftCmsNavRepo struct {
 }
 
 var CmsNavRepo = &GftCmsNavRepo{
-	mgo.NewMgoRepo("GftCmsNav", cms.NewGftCmsNav),
+	mgo.NewMgoRepo[*cms.GftCmsNav]("GftCmsNav"),
 }

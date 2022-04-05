@@ -42,10 +42,10 @@ var GsYxsResolver = &GftGsYxsResolver{
 	},
 }
 
-func saveGsYxs(p graphql.ResolveParams) (interface{}, error) {
+func saveGsYxs(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, jc.NewGftGsYxs())
+	item, err := gql.GqlParseInput(p, new(jc.GftGsYxs))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)
@@ -55,18 +55,18 @@ func saveGsYxs(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.GsYxsRepo.Save(item)
 }
 
-func gsYxses(p graphql.ResolveParams) (interface{}, error) {
+func gsYxses(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	return mgo.GsYxsRepo.All()
 }
 
-func gsYxs(p graphql.ResolveParams) (interface{}, error) {
+func gsYxs(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	return mgo.GsYxsRepo.Get(id)
 }
 
-func delGsYxs(p graphql.ResolveParams) (interface{}, error) {
+func delGsYxs(p graphql.ResolveParams) (any, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
 	return mgo.GsYxsRepo.Del(id)

@@ -10,5 +10,5 @@ type GftDictItemRepo struct {
 }
 
 var DictItemRepo = &GftDictItemRepo{
-	mgo.NewMgoRepo("GftDictItem", base.NewGftDictItem),
+	mgo.NewMgoRepo[*base.GftDictItem]("GftDictItem"),
 }

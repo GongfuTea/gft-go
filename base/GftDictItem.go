@@ -16,9 +16,3 @@ type GftDictItem struct {
 
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
-
-func NewGftDictItem() *GftDictItem {
-	return &GftDictItem{
-		DbEntity: db.NewDbEntity(),
-	}
-}

@@ -25,9 +25,3 @@ type GftCmsPost struct {
 	AccessLevel  AccessLevel `bson:"accessLevel" json:"accessLevel"`
 	NewWindow    bool        `bson:"newWindow" json:"newWindow"`
 }
-
-func NewGftCmsPost() *GftCmsPost {
-	return &GftCmsPost{
-		DbEntity: db.NewDbEntity(),
-	}
-}

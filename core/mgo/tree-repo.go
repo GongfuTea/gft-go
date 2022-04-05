@@ -10,10 +10,10 @@ type MgoTreeRepo[T types.ITreeEntity] struct {
 	*MgoRepo[T]
 }
 
-func NewMgoTreeRepo[T types.ITreeEntity](name string, factory func() T) *MgoTreeRepo[T] {
+func NewMgoTreeRepo[T types.ITreeEntity](name string) *MgoTreeRepo[T] {
 	return &MgoTreeRepo[T]{
 		&MgoRepo[T]{
-			Name: name, factory: factory,
+			Name: name,
 		},
 	}
 }

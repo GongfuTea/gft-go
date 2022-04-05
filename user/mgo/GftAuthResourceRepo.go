@@ -15,7 +15,7 @@ type GftAuthResourceRepo struct {
 }
 
 var AuthResourceRepo = &GftAuthResourceRepo{
-	mgo.NewMgoTreeRepo("GftAuthResource", auth.NewGftAuthResource),
+	mgo.NewMgoTreeRepo[*auth.GftAuthResource]("GftAuthResource"),
 }
 
 // func (repo GftAuthResourceRepo) Save(model auth.GftAuthResource) (*auth.GftAuthResource, error) {

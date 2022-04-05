@@ -10,5 +10,5 @@ type GftCmsCategoryRepo struct {
 }
 
 var CmsCategoryRepo = &GftCmsCategoryRepo{
-	mgo.NewMgoTreeRepo("GftCmsCategory", cms.NewGftCmsCategory),
+	mgo.NewMgoTreeRepo[*cms.GftCmsCategory]("GftCmsCategory"),
 }

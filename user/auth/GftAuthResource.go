@@ -13,8 +13,8 @@ type GftAuthResource struct {
 	CreatedBy        string             `bson:"createdBy,omitempty" json:"createdBy,omitempty"`
 }
 
-func NewGftAuthResource() *GftAuthResource {
-	return &GftAuthResource{
-		DbTreeEntity: db.NewDbTreeEntity(),
-	}
-}
+// func NewGftAuthResource() *GftAuthResource {
+// 	return &GftAuthResource{
+// 		DbTreeEntity: db.NewDbTreeEntity(),
+// 	}
+// }

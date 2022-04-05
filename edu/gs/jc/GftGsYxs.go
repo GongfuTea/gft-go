@@ -13,9 +13,3 @@ type GftGsYxs struct {
 
 	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
-
-func NewGftGsYxs() *GftGsYxs {
-	return &GftGsYxs{
-		DbTreeEntity: db.NewDbTreeEntity(),
-	}
-}

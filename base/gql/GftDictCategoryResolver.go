@@ -45,7 +45,7 @@ var DictCategoryResolver = &GftDictCategoryResolver{
 func saveDictCategory(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 
-	item, err := gql.GqlParseInput(p, base.NewGftDictCategory())
+	item, err := gql.GqlParseInput(p, new(base.GftDictCategory))
 
 	if err != nil {
 		fmt.Printf("save category err, %+v", err)

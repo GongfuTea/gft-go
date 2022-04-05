@@ -30,10 +30,10 @@ func (e DbTreeEntity) GetCreatedAt() time.Time {
 	return e.CreatedAt
 }
 
-func NewDbTreeEntity() *DbTreeEntity {
-	return &DbTreeEntity{
-		TreeEntity: &types.TreeEntity{
-			Entity: &types.Entity{},
-		},
-	}
-}
+// func NewDbTreeEntity() *DbTreeEntity {
+// 	return &DbTreeEntity{
+// 		TreeEntity: &types.TreeEntity{
+// 			Entity: &types.Entity{},
+// 		},
+// 	}
+// }

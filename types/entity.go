@@ -8,7 +8,6 @@ import (
 
 type IEntity interface {
 	ID() string
-	IsNew() bool
 	Init()
 }
 
@@ -18,11 +17,6 @@ type Entity struct {
 
 func (e Entity) ID() string {
 	return e.Id
-}
-
-func (e Entity) IsNew() bool {
-	isNew := e.Id == ""
-	return isNew
 }
 
 func (e *Entity) Init() {

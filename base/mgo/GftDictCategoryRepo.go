@@ -10,5 +10,5 @@ type GftDictCategoryRepo struct {
 }
 
 var DictCategoryRepo = &GftDictCategoryRepo{
-	mgo.NewMgoTreeRepo("GftDictCategory", base.NewGftDictCategory),
+	mgo.NewMgoTreeRepo[*base.GftDictCategory]("GftDictCategory"),
 }
