@@ -2,14 +2,12 @@ package mgo
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	jsonx "github.com/GongfuTea/gft-go/core/jsonx"
 	"github.com/GongfuTea/gft-go/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type MgoRepo[T types.IEntity] struct {
@@ -25,40 +23,20 @@ func (repo MgoRepo[T]) Coll() *mongo.Collection {
 }
 
 func (repo MgoRepo[T]) Get(id string) (T, error) {
-	result := *new(T)
+	return repo.Find(context.Background(), bson.M{"_id": id}).One()
+}
 
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-
-	if err := repo.Coll().FindOne(ctx, bson.M{"_id": id}).Decode(result); err != nil {
-		return *new(T), fmt.Errorf("not found, %#V", err)
+func (repo MgoRepo[T]) Find(ctx context.Context, filter any) IQuery[T] {
+	println("repo find", filter)
+	return &Query[T]{
+		ctx:    ctx,
+		filter: filter,
+		coll:   repo.Coll(),
 	}
-
-	return result, nil
 }
 
 func (repo MgoRepo[T]) All() ([]T, error) {
-	var results []T
-	var err error
-
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	cur, err := repo.Coll().Find(ctx, bson.D{}, options.Find())
-	if err != nil {
-		return nil, err
-	}
-	for cur.Next(ctx) {
-		elem := new(T)
-		err = cur.Decode(elem)
-
-		if err != nil {
-			return nil, err
-		}
-		results = append(results, *elem)
-	}
-	if err = cur.Err(); err != nil {
-		return nil, err
-	}
-	cur.Close(ctx)
-	return results, nil
+	return repo.Find(context.Background(), bson.M{}).All()
 }
 
 func (repo MgoRepo[T]) Save(model T) (T, error) {
@@ -66,7 +44,7 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 	var err error
 
 	jsonx.PrintAsJson("MgoRepo Save", model)
-	if repo.IsExist(model.ID()) {
+	if y, _ := repo.IsExist(model.ID()); y {
 		q2 := bson.M{"$set": model}
 		_, err = repo.Coll().UpdateByID(ctx, model.ID(), q2)
 	} else {
@@ -90,13 +68,9 @@ func (repo MgoRepo[T]) Del(id string) (bool, error) {
 
 }
 
-func (repo MgoRepo[T]) IsExist(id string) bool {
+func (repo MgoRepo[T]) IsExist(id string) (bool, error) {
 	if id == "" {
-		return false
+		return false, nil
 	}
-
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	result := repo.Coll().FindOne(ctx, bson.M{"_id": id})
-
-	return result.Err() == nil
+	return repo.Find(context.Background(), bson.M{"_id": id}).Exist()
 }

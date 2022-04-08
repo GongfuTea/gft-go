@@ -1,12 +1,14 @@
 package gql
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type GftDictItemResolver struct {
@@ -60,8 +62,10 @@ func saveDataDict(p graphql.ResolveParams) (interface{}, error) {
 
 func DataDicts(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
-	// categoryId := p.Args["categoryId"].(string)
-	return mgo.DictItemRepo.All()
+	categoryId := p.Args["categoryId"].(string)
+	println("categoryId", categoryId)
+
+	return mgo.DictItemRepo.Find(context.Background(), bson.M{"categoryId": categoryId}).All()
 }
 
 func DataDict(p graphql.ResolveParams) (interface{}, error) {
