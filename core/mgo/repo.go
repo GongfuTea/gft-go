@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	jsonx "github.com/GongfuTea/gft-go/core/jsonx"
 	"github.com/GongfuTea/gft-go/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,7 +26,6 @@ func (repo MgoRepo[T]) Get(id string) (T, error) {
 }
 
 func (repo MgoRepo[T]) Find(ctx context.Context, filter any) IQuery[T] {
-	println("repo find", filter)
 	return &Query[T]{
 		ctx:    ctx,
 		filter: filter,
@@ -43,7 +41,7 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
 
-	jsonx.PrintAsJson("MgoRepo Save", model)
+	// jsonx.PrintAsJson("MgoRepo Save", model)
 	if y, _ := repo.IsExist(model.ID()); y {
 		q2 := bson.M{"$set": model}
 		_, err = repo.Coll().UpdateByID(ctx, model.ID(), q2)

@@ -23,15 +23,15 @@ type Query[T types.IEntity] struct {
 }
 
 func (q Query[T]) One() (T, error) {
-	result := *new(T)
+	result := new(T)
 
 	opt := options.FindOne()
 
 	if err := q.coll.FindOne(q.ctx, q.filter, opt).Decode(result); err != nil {
-		return *new(T), fmt.Errorf("not found, %#V", err)
+		return *new(T), fmt.Errorf("not found, %#v", err)
 	}
 
-	return result, nil
+	return *result, nil
 }
 
 func (q Query[T]) All() (results []T, err error) {

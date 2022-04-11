@@ -7,6 +7,7 @@ import (
 type GftGsYxs struct {
 	*db.DbTreeEntity `bson:",inline"`
 	Name             string  `bson:"name" json:"name,omitempty"`
+	Nickname         string  `bson:"nickname" json:"nickname,omitempty"`
 	SortOrder        float32 `bson:"sortOrder" json:"sortOrder,omitempty"`
 	Note             string  `bson:"note" json:"note"`
 	CreatedBy        string  `bson:"createdBy,omitempty" json:"createdBy,omitempty"`

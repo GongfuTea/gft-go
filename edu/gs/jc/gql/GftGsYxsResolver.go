@@ -74,10 +74,10 @@ func delGsYxs(p graphql.ResolveParams) (any, error) {
 
 var GfGsYxsType = gql.NewObjBuilder("GftGsYxs").
 	AddEntityTreeFields().
-	AddString("name", "note").
+	AddString("name", "nickname", "note").
 	AddFloat("sortOrder").GetObj()
 
 var GfGsYxsInput = gql.NewInputObjBuilder("GfGsYxsInput").
-	AddString("id", "pid", "note").
+	AddString("id", "pid", "nickname", "note").
 	AddNonNullString("name", "code").
 	AddFloat("sortOrder").GetObj()

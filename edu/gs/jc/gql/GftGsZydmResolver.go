@@ -74,12 +74,12 @@ func delGsZydm(p graphql.ResolveParams) (interface{}, error) {
 
 var GfGsZydmType = gql.NewObjBuilder("GftGsZydm").
 	AddEntityFields().
-	AddString("name", "code", "xwlbm", "xkmlm", "note").
+	AddString("name", "code", "xwlxm", "xkmlm", "note").
 	AddInt("level").
 	AddFloat("sortOrder").GetObj()
 
 var GfGsZydmInput = gql.NewInputObjBuilder("GfGsZydmInput").
-	AddString("id", "pid", "note", "xwlbm", "xkmlm").
+	AddString("id", "pid", "note", "xwlxm", "xkmlm").
 	AddNonNullString("name", "code").
 	AddInt("level").
 	AddFloat("sortOrder").GetObj()
