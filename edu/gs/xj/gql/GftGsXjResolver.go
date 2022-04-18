@@ -76,10 +76,11 @@ func delGsXj(p graphql.ResolveParams) (interface{}, error) {
 
 var GfGsXjType = gql.NewObjBuilder("GftGsXj").
 	AddEntityFields().
-	AddString("xh", "xm", "note", "createdAt").
+	AddString("xh", "xm", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note", "createdAt").
+	AddInt("nj").
 	AddFloat("xz").GetObj()
 
 var GfGsXjInput = gql.NewInputObjBuilder("GftGsXjInput").
-	AddString("id", "note").
+	AddString("id", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note").
 	AddNonNullString("xh", "xm").
-	AddFloat("xz").GetObj()
+	AddInt("nj").AddFloat("xz").GetObj()
