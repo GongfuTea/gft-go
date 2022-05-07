@@ -1,22 +1,14 @@
 package gql
 
 import (
+	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 )
 
 func QueryFields() graphql.Fields {
-	var fields = graphql.Fields{}
-	for k, v := range GsXjResolver.Query {
-		fields[k] = v
-	}
-
-	return fields
+	return gql.MergeFields(GsXjResolver.Query)
 }
 
 func MutationFields() graphql.Fields {
-	var fields = graphql.Fields{}
-	for k, v := range GsXjResolver.Mutation {
-		fields[k] = v
-	}
-	return fields
+	return gql.MergeFields(GsXjResolver.Mutation)
 }

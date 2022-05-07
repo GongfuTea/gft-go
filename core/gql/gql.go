@@ -25,6 +25,15 @@ func GqlParseInput[T types.IEntity](p graphql.ResolveParams, input T) (output T,
 	return input, err
 }
 
+func GqlParseFilter[T any](p graphql.ResolveParams, input T) (output T, err error) {
+	args := p.Args["filter"].(map[string]any)
+	data, _ := json.Marshal(args)
+	// fmt.Printf("save category, %+v", args)
+
+	err = json.Unmarshal(data, &input)
+	return input, err
+}
+
 func MergeFields(list ...graphql.Fields) graphql.Fields {
 	var fields = graphql.Fields{}
 	for _, items := range list {

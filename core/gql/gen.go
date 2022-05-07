@@ -28,6 +28,14 @@ func NewArgInput(t graphql.Input) graphql.FieldConfigArgument {
 	}
 }
 
+func NewArgFilter(t graphql.Input) graphql.FieldConfigArgument {
+	return graphql.FieldConfigArgument{
+		"filter": &graphql.ArgumentConfig{
+			Type: t,
+		},
+	}
+}
+
 func NewObject(name string, fields FieldsConfig) *graphql.Object {
 
 	m := graphql.Fields{

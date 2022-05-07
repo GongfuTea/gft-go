@@ -13,8 +13,8 @@ type IDbEntity interface {
 }
 
 type DbEntity struct {
-	*types.Entity `bson:",inline"`
-	CreatedAt     time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
+	types.Entity `bson:",inline"`
+	CreatedAt    time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
 }
 
 func (e DbEntity) GetCreatedAt() time.Time {
@@ -30,7 +30,5 @@ func (e *DbEntity) Init() {
 }
 
 func NewDbEntity() *DbEntity {
-	return &DbEntity{
-		Entity: &types.Entity{},
-	}
+	return &DbEntity{}
 }

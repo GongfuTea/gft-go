@@ -10,26 +10,26 @@ import (
 type Xlsx struct {
 	*excelize.File
 
-	filename string
-	sheet    string
+	Filename string
+	CurSheet string
 }
 
 func OpenFile(filename string) *Xlsx {
 	x := &Xlsx{
-		filename: filename,
+		Filename: filename,
 	}
 	x.File, _ = excelize.OpenFile(filename)
 
 	return x
 }
 
-func (x *Xlsx) Sheet(sheet string) *Xlsx {
-	x.sheet = sheet
+func (x *Xlsx) SetSheet(sheet string) *Xlsx {
+	x.CurSheet = sheet
 	return x
 }
 
 func (x *Xlsx) GetCellStr(col string, row int) (string, error) {
-	return x.GetCellValue(x.sheet, fmt.Sprintf("%s%d", col, row))
+	return x.GetCellValue(x.CurSheet, fmt.Sprintf("%s%d", col, row))
 }
 
 func (x *Xlsx) GetCellStr2(col string, row int) string {
@@ -38,7 +38,7 @@ func (x *Xlsx) GetCellStr2(col string, row int) string {
 }
 
 func (x *Xlsx) GetCellInt(col string, row int) (int, error) {
-	val, _ := x.GetCellValue(x.sheet, fmt.Sprintf("%s%d", col, row))
+	val, _ := x.GetCellValue(x.CurSheet, fmt.Sprintf("%s%d", col, row))
 	return strconv.Atoi(val)
 }
 
@@ -48,7 +48,7 @@ func (x *Xlsx) GetCellInt2(col string, row int) int {
 }
 
 func (x *Xlsx) GetCellFloat(col string, row int) (float64, error) {
-	val, _ := x.GetCellValue(x.sheet, fmt.Sprintf("%s%d", col, row))
+	val, _ := x.GetCellValue(x.CurSheet, fmt.Sprintf("%s%d", col, row))
 	return strconv.ParseFloat(val, 32)
 }
 

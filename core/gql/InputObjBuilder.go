@@ -52,6 +52,10 @@ func (ob *InputObjBuilder) AddField(t graphql.Input, fields ...string) *InputObj
 	return ob
 }
 
+func (ob *InputObjBuilder) AddPageFields() *InputObjBuilder {
+	return ob.AddInt("page", "size")
+}
+
 func (ob *InputObjBuilder) GetObj() *graphql.InputObject {
 	return graphql.NewInputObject(graphql.InputObjectConfig{
 		Name:   ob.Name,
