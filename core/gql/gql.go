@@ -16,6 +16,12 @@ func GqlMustLogin(p graphql.ResolveParams) {
 
 }
 
+func GqlParse[T any](val any, input T) (output T, err error) {
+	data, _ := json.Marshal(val)
+	err = json.Unmarshal(data, &input)
+	return input, err
+}
+
 func GqlParseInput[T types.IEntity](p graphql.ResolveParams, input T) (output T, err error) {
 	args := p.Args["input"].(map[string]any)
 	data, _ := json.Marshal(args)
@@ -26,7 +32,7 @@ func GqlParseInput[T types.IEntity](p graphql.ResolveParams, input T) (output T,
 }
 
 func GqlParseFilter[T any](p graphql.ResolveParams, input T) (output T, err error) {
-	args := p.Args["filter"].(map[string]any)
+	args := p.Args["filter"]
 	data, _ := json.Marshal(args)
 	// fmt.Printf("save category, %+v", args)
 

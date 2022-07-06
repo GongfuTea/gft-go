@@ -3,6 +3,7 @@ package xlsx
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -28,13 +29,22 @@ func (x *Xlsx) SetSheet(sheet string) *Xlsx {
 	return x
 }
 
+func (x *Xlsx) SetCellVal(row int, col string, val any) error {
+	axis := fmt.Sprintf("%s%d", col, row)
+	return x.SetCellValAxis(axis, val)
+}
+
+func (x *Xlsx) SetCellValAxis(axis string, val any) error {
+	return x.SetCellValue(x.CurSheet, axis, val)
+}
+
 func (x *Xlsx) GetCellStr(col string, row int) (string, error) {
 	return x.GetCellValue(x.CurSheet, fmt.Sprintf("%s%d", col, row))
 }
 
 func (x *Xlsx) GetCellStr2(col string, row int) string {
 	txt, _ := x.GetCellStr(col, row)
-	return txt
+	return strings.TrimSpace((txt))
 }
 
 func (x *Xlsx) GetCellInt(col string, row int) (int, error) {

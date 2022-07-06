@@ -18,7 +18,7 @@ type QueryPageResult[T types.IEntity] struct {
 type IQuery[T types.IEntity] interface {
 	One() (T, error)
 	All() (results []T, err error)
-	Page(filter *db.DbFilter) (result QueryPageResult[T], err error)
+	Page(filter *db.PagerFilter) (result QueryPageResult[T], err error)
 	Count() (int64, error)
 	Exist() (bool, error)
 }
@@ -43,7 +43,7 @@ func (q Query[T]) One() (T, error) {
 	return *result, nil
 }
 
-func (q *Query[T]) Page(filter *db.DbFilter) (result QueryPageResult[T], err error) {
+func (q *Query[T]) Page(filter *db.PagerFilter) (result QueryPageResult[T], err error) {
 	q.page = &filter.Page
 	q.size = &filter.Size
 	result.Items, err = q.All()

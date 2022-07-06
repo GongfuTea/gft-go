@@ -1,6 +1,6 @@
 package db
 
-type DbFilter struct {
+type PagerFilter struct {
 	Page int64
 	Size int64
 }

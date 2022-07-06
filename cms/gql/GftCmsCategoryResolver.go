@@ -74,14 +74,12 @@ func delDataCategory(p graphql.ResolveParams) (any, error) {
 	return mgo.CmsCategoryRepo.Del(id)
 }
 
-var GfCmsCategoryType = gql.NewObjectTree("GftCmsCategory", gql.FieldsConfig{
-	Strings:        []string{"name", "note", "createdBy"},
-	NonNullStrings: []string{},
-	Floats:         []string{"sortOrder"},
-})
+var GfCmsCategoryType = gql.NewObjBuilder("GftCmsCategory").
+	AddEntityTreeFields().
+	AddString("name", "note", "createdBy").
+	AddFloat("sortOrder").GetObj()
 
-var GfCmsCategoryInput = gql.NewInputObject("GftCmsCategoryInput", gql.FieldsConfig{
-	Strings:        []string{"id", "pid", "note"},
-	NonNullStrings: []string{"name", "code"},
-	Floats:         []string{"sortOrder"},
-})
+var GfCmsCategoryInput = gql.NewInputObjBuilder("GftCmsCategoryInput").
+	AddString("id", "pid", "note").
+	AddNonNullString("name", "code").
+	AddFloat("sortOrder").GetObj()

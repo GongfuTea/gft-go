@@ -3,6 +3,7 @@ package gql
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
@@ -11,6 +12,11 @@ import (
 	"github.com/graphql-go/graphql"
 	"go.mongodb.org/mongo-driver/bson"
 )
+
+type GsXjFilter struct {
+	db.PagerFilter
+	TimePoint time.Time
+}
 
 type GftGsXjResolver struct {
 	Query    graphql.Fields
@@ -60,7 +66,7 @@ func saveGsXj(p graphql.ResolveParams) (interface{}, error) {
 
 func gsXjs(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
-	filter, _ := gql.GqlParseFilter(p, new(db.DbFilter))
+	filter, _ := gql.GqlParseFilter(p, new(db.PagerFilter))
 	return mgo.GsXjRepo.Find(context.Background(), bson.M{}).Page(filter)
 }
 
@@ -90,7 +96,7 @@ var GfGsXjInput = gql.NewInputObjBuilder("GftGsXjInput").
 	AddInt("nj").AddFloat("xz").GetObj()
 
 var GfGsXjFilter = gql.NewInputObjBuilder("GftGsXjFilter").
-	AddInt("page", "size").GetObj()
+	AddInt("page", "size").AddDateTime("timePoint").GetObj()
 
 var GfGsXjFilterResp = gql.NewObjBuilder("GftGsXjFilterResp").
 	AddField(graphql.NewList(GfGsXjType), "items").

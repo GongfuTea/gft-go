@@ -21,6 +21,12 @@ func NewObjBuilder(name string) *ObjBuilder {
 	}
 }
 
+func BuildGqlObj(name string, fields ...string) *graphql.Object {
+	obj := NewObjBuilder(name)
+
+	return obj.GetObj()
+}
+
 func (ob *ObjBuilder) AddString(fields ...string) *ObjBuilder {
 	return ob.AddField(graphql.String, fields...)
 }

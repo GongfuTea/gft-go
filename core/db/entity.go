@@ -24,7 +24,9 @@ func (e DbEntity) GetCreatedAt() time.Time {
 func (e *DbEntity) Init() {
 	e.Entity.Init()
 
-	e.CreatedAt = time.Now()
+	if e.CreatedAt.IsZero() {
+		e.CreatedAt = time.Now()
+	}
 
 	fmt.Printf("init DbEntity, %+v\n", e)
 }
