@@ -21,12 +21,6 @@ func NewObjBuilder(name string) *ObjBuilder {
 	}
 }
 
-func BuildGqlObj(name string, fields ...string) *graphql.Object {
-	obj := NewObjBuilder(name)
-
-	return obj.GetObj()
-}
-
 func (ob *ObjBuilder) AddString(fields ...string) *ObjBuilder {
 	return ob.AddField(graphql.String, fields...)
 }
@@ -53,7 +47,7 @@ func (ob *ObjBuilder) AddDateTime(fields ...string) *ObjBuilder {
 
 func (ob *ObjBuilder) AddField(t graphql.Output, fields ...string) *ObjBuilder {
 	for _, f := range fields {
-		fmt.Println("ob:", f)
+		// fmt.Println("ob:", f)
 
 		ob.Obj.AddFieldConfig(f, &graphql.Field{
 			Type: t,

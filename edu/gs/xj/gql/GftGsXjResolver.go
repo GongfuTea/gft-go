@@ -84,16 +84,17 @@ func delGsXj(p graphql.ResolveParams) (interface{}, error) {
 	return mgo.GsXjRepo.Del(id)
 }
 
-var GfGsXjType = gql.NewObjBuilder("GftGsXj").
-	AddEntityFields().
-	AddString("xh", "xm", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note", "createdAt").
-	AddInt("nj").
-	AddFloat("xz").GetObj()
+var gqlBuilder = gql.NewGqlBuilder(&xj.GftGsXj{})
 
-var GfGsXjInput = gql.NewInputObjBuilder("GftGsXjInput").
-	AddString("id", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note").
-	AddNonNullString("xh", "xm").
-	AddInt("nj").AddFloat("xz").GetObj()
+var GfGsXjType = gqlBuilder.NewObjBuilder("GftGsXj").
+	AddEntityFields().
+	AddFields("xh", "xm", "nj", "xz", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note", "createdAt").
+	Build()
+
+var GfGsXjInput = gqlBuilder.NewInputObjBuilder("GftGsXjInput").
+	AddFields("id", "nj", "xz", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note").
+	AddNonNullFields("xh", "xm").
+	Build()
 
 var GfGsXjFilter = gql.NewInputObjBuilder("GftGsXjFilter").
 	AddInt("page", "size").AddDateTime("timePoint").GetObj()

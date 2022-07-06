@@ -1,8 +1,6 @@
 package gql
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
 )
 
@@ -44,7 +42,7 @@ func (ob *InputObjBuilder) AddDateTime(fields ...string) *InputObjBuilder {
 
 func (ob *InputObjBuilder) AddField(t graphql.Input, fields ...string) *InputObjBuilder {
 	for _, f := range fields {
-		fmt.Println("input:", f)
+		// fmt.Println("input:", f)
 		ob.Fields[f] = &graphql.InputObjectFieldConfig{
 			Type: t,
 		}
