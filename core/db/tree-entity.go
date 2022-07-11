@@ -13,8 +13,8 @@ type IDbTreeEntity interface {
 }
 
 type DbTreeEntity struct {
-	*types.TreeEntity `bson:",inline"`
-	CreatedAt         time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
+	types.TreeEntity `bson:",inline"`
+	CreatedAt        time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
 }
 
 func (e *DbTreeEntity) Init() {
