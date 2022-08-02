@@ -1,11 +1,13 @@
 package gql
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/GongfuTea/gft-go/cms/mgo"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type GftAppCmsResolver struct {
@@ -28,11 +30,11 @@ var AppCmsResolver = &GftAppCmsResolver{
 	},
 }
 
-func appPosts(p graphql.ResolveParams) (interface{}, error) {
-	return mgo.CmsPostRepo.All()
+func appPosts(p graphql.ResolveParams) (any, error) {
+	return mgo.CmsPostRepo.Find(context.Background(), bson.M{"state": "Published"}).All()
 }
 
-func appPost(p graphql.ResolveParams) (interface{}, error) {
+func appPost(p graphql.ResolveParams) (any, error) {
 	id := p.Args["id"].(string)
 	fmt.Printf("dataPost Post id, %+v", id)
 

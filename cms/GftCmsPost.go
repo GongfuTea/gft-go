@@ -18,6 +18,7 @@ type GftCmsPost struct {
 	Type         PostType    `bson:"type" json:"type"`
 	Format       PostFormat  `bson:"format" json:"format"`
 	Note         string      `bson:"note" json:"note"`
+	Tags         []string    `bson:"tags" json:"tags"`
 	CategoryIds  []string    `bson:"categoryIds" json:"categoryIds"`
 	CreatedBy    string      `bson:"createdBy,omitempty" json:"createdBy,omitempty"`
 	PublishDate  time.Time   `bson:"publishDate,omitempty" json:"publishDate,omitempty"`
