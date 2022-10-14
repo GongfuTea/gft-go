@@ -88,7 +88,7 @@ var gqlBuilder = gql.NewGqlBuilder(&xj.GftGsXj{})
 
 var GfGsXjType = gqlBuilder.NewObjBuilder("GftGsXj").
 	AddEntityFields().
-	AddFields("xh", "xm", "nj", "xz", "sfzh", "zjlxm", "xbm", "mzm", "zzmmm", "yxsm", "zydm", "zymc", "pyccm", "xxxsm", "pyfsm", "xsdqztm", "note", "createdAt").
+	AddFields("xh", "xm", "nj", "xz", "sfzh", "zjlxm", "xb", "xbm", "mz", "mzm", "zzmm", "zzmmm", "yxs", "yxsm", "zydm", "zymc", "pycc", "pyccm", "xxxs", "xxxsm", "pyfs", "pyfsm", "xsdqzt", "xsdqztm", "note", "createdAt").
 	Build()
 
 var GfGsXjInput = gqlBuilder.NewInputObjBuilder("GftGsXjInput").
