@@ -66,3 +66,10 @@ func (x *Xlsx) GetCellFloat2(col string, row int) float64 {
 	val, _ := x.GetCellFloat(col, row)
 	return val
 }
+
+func (x *Xlsx) TotalRows() int {
+	if rows, err := x.Rows(x.CurSheet); err == nil {
+		return rows.TotalRows()
+	}
+	return 0
+}
