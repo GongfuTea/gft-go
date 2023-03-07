@@ -68,8 +68,8 @@ func (x *Xlsx) GetCellFloat2(col string, row int) float64 {
 }
 
 func (x *Xlsx) TotalRows() int {
-	if rows, err := x.Rows(x.CurSheet); err == nil {
-		return rows.TotalRows()
+	if rows, err := x.GetRows(x.CurSheet); err == nil {
+		return len(rows)
 	}
 	return 0
 }
