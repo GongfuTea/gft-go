@@ -8,7 +8,6 @@ import (
 	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/GongfuTea/gft-go/edu/gs/xj"
-	"github.com/GongfuTea/gft-go/edu/gs/xj/mgo"
 	"github.com/graphql-go/graphql"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -61,13 +60,13 @@ func saveGsXj(p graphql.ResolveParams) (interface{}, error) {
 	}
 	fmt.Printf("save category, %+v", item)
 
-	return mgo.GsXjRepo.Save(item)
+	return xj.GsXjRepo.Save(item)
 }
 
 func gsXjs(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	filter, _ := gql.GqlParseFilter(p, new(db.PagerFilter))
-	return mgo.GsXjRepo.Find(context.Background(), bson.M{}).Page(filter)
+	return xj.GsXjRepo.Find(context.Background(), bson.M{}).Page(filter)
 }
 
 func gsXj(p graphql.ResolveParams) (interface{}, error) {
@@ -75,13 +74,13 @@ func gsXj(p graphql.ResolveParams) (interface{}, error) {
 	id := p.Args["id"].(string)
 	fmt.Printf("dataCategory category id, %+v", id)
 
-	return mgo.GsXjRepo.Get(id)
+	return xj.GsXjRepo.Get(id)
 }
 
 func delGsXj(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.GsXjRepo.Del(id)
+	return xj.GsXjRepo.Del(id)
 }
 
 var gqlBuilder = gql.NewGqlBuilder(&xj.GftGsXj{})

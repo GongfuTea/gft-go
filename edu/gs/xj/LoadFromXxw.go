@@ -8,6 +8,7 @@ import (
 	bmgo "github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/edu/gs/jc"
 	"github.com/GongfuTea/gft-go/edu/gs/jc/mgo"
+	"github.com/GongfuTea/gft-go/x/timex"
 	"github.com/GongfuTea/gft-go/x/xlsx"
 	"github.com/xuri/excelize/v2"
 )
@@ -16,11 +17,14 @@ import (
 type LoadFromXxw struct {
 	*xlsx.Xlsx
 
-	XjList   GftGsXjList
-	YxsList  []*jc.GftGsYxs
-	MzList   []*base.GftDictItem
-	ZzmmList []*base.GftDictItem
-	ZjlxList []*base.GftDictItem
+	XjList     GftGsXjList
+	YxsList    []*jc.GftGsYxs
+	MzList     []*base.GftDictItem
+	ZzmmList   []*base.GftDictItem
+	ZjlxList   []*base.GftDictItem
+	XxxsList   []*base.GftDictItem
+	PyfsList   []*base.GftDictItem
+	XsdqztList []*base.GftDictItem
 }
 
 func (file *LoadFromXxw) Load(filename string) *LoadFromXxw {
@@ -29,7 +33,10 @@ func (file *LoadFromXxw) Load(filename string) *LoadFromXxw {
 	file.YxsList, _ = mgo.GsYxsRepo.All()
 	file.MzList, _ = bmgo.DictItemRepo.FindByCategoryId("GB.MZ")
 	file.ZzmmList, _ = bmgo.DictItemRepo.FindByCategoryId("GB.ZZMM")
-	file.ZjlxList, _ = bmgo.DictItemRepo.FindByCategoryId("GB.ZJLX")
+	file.ZjlxList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.SFZJLX")
+	file.XxxsList, _ = bmgo.DictItemRepo.FindByCategoryId("XX.XXXS")
+	file.PyfsList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.PYFS")
+	file.XsdqztList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.XSDQZT")
 	file.XjList = GftGsXjList{}
 
 	rows, _ := file.Xlsx.GetRows(file.Xlsx.CurSheet, excelize.Options{RawCellValue: true})
@@ -40,23 +47,32 @@ func (file *LoadFromXxw) Load(filename string) *LoadFromXxw {
 			Ksh:     row[0],
 			Xh:      row[2],
 			Xm:      row[3],
+			Xb:      row[4],
 			Xbm:     file.Xbm(row[4]),
 			Csrq:    file.GetTime(row[5]),
 			Sfzh:    row[6],
-			Zzmmm:   file.GetZzmmm(row[7]),
-			Mzm:     file.GetMzm(row[8]),
-			Zjlxm:   file.GetZjlxm(row[6]),
+			Zzmmm:   file.GetZzmm(row[7]).Code,
+			Zzmm:    file.GetZzmm(row[7]).Name,
+			Mz:      file.GetMz(row[8]).Name,
+			Mzm:     file.GetMz(row[8]).Code,
+			Zjlx:    file.GetZjlx(row[6]).Name,
+			Zjlxm:   file.GetZjlx(row[6]).Code,
 			Zydm:    row[11],
 			Zymc:    row[12],
-			Yxsm:    file.GetYxsm(row[13]),
+			Yxsm:    file.GetYxs(row[13]).Code,
+			Yxs:     file.GetYxs(row[13]).Name,
+			Pycc:    row[16],
 			Pyccm:   file.GetPyccm(row[16]),
 			Xz:      file.GetFloat(row[17]),
-			Xxxsm:   file.GetXxxsm(row[18]),
+			Xxxs:    file.GetXxxs(row[18]).Name,
+			Xxxsm:   file.GetXxxs(row[18]).Code,
 			Nj:      file.GetInt(row[19]),
 			Rxrq:    rxrq,
 			Yjbyrq:  file.GetTime(row[21]),
-			Xsdqztm: file.GetXjztm(row[22]),
-			Pyfsm:   file.GetPyfsm(row[23]),
+			Xsdqztm: file.GetXjzt(row[22]).Code,
+			Xsdqzt:  file.GetXjzt(row[22]).Name,
+			Pyfs:    file.GetPyfs(row[23]).Name,
+			Pyfsm:   file.GetPyfs(row[23]).Code,
 		}
 		file.XjList = append(file.XjList, stu)
 	}
@@ -84,88 +100,116 @@ func (x *LoadFromXxw) GetPyccm(pycc string) string {
 	}
 }
 
-func (x *LoadFromXxw) GetPyfsm(val string) string {
+func (x *LoadFromXxw) GetPyfs(val string) *base.GftDictItem {
+	code := "11"
 	if val == "定向" {
-		return "12"
+		code = "12"
 	} else if val == "委培" {
-		return "22"
-	} else {
-		return "11"
+		code = "12"
 	}
+	for _, it := range x.PyfsList {
+		if it.Code == code {
+			return it
+		}
+	}
+	panic("Error:" + val)
 }
 
-func (x *LoadFromXxw) GetXxxsm(val string) string {
-	if val == "全日制" {
-		return "1"
-	} else if val == "非全日制" {
-		return "2"
-	} else {
-		return "1"
+func (x *LoadFromXxw) GetXxxs(val string) *base.GftDictItem {
+	name := val
+	if val != "全日制" && val != "非全日制" {
+		name = "全日制"
 	}
+
+	for _, it := range x.XxxsList {
+		if it.Name == name {
+			return it
+		}
+	}
+	panic("Error:" + val)
 }
 
-func (x *LoadFromXxw) GetXjztm(val string) string {
-	if val == "休学" {
-		return "02"
+func (x *LoadFromXxw) GetXjzt(val string) *base.GftDictItem {
+	code := "01"
+	if val == "注册学籍" {
+		code = "01"
+	} else if val == "休学" {
+		code = "02"
 	} else if val == "暂缓注册" {
-		return "12"
+		code = "12"
 	} else if val == "待注册" {
-		return "12"
-	} else if val == "注册学籍" {
-		return "01"
+		code = "12"
+	} else {
+		panic("Error:" + val)
+	}
+
+	for _, it := range x.XsdqztList {
+		if it.Code == code {
+			return it
+		}
 	}
 	panic("Error:" + val)
 
 }
-
-func (x *LoadFromXxw) GetYxsm(val string) string {
+func (x *LoadFromXxw) GetYxs(val string) *jc.GftGsYxs {
 	for _, it := range x.YxsList {
 		if it.Name == val || it.Nickname == val {
-			return it.Code
+			return it
+		}
+	}
+	panic("Error:" + val)
+}
+func (x *LoadFromXxw) GetYxsm(val string) string {
+	return x.GetYxs(val).Code
+}
+
+func (x *LoadFromXxw) GetMz(val string) *base.GftDictItem {
+	if val == "其他" {
+		val = "其它"
+	}
+	for _, it := range x.MzList {
+		if it.Name == val {
+			return it
 		}
 	}
 	panic("Error:" + val)
 }
 
 func (x *LoadFromXxw) GetMzm(val string) string {
-	if val == "其他" {
-		val = "其它"
-	}
-	for _, it := range x.MzList {
-		if it.Name == val {
-			return it.Code
+	return x.GetMz(val).Code
+}
+
+func (x *LoadFromXxw) GetZzmm(val string) *base.GftDictItem {
+	for _, it := range x.ZzmmList {
+		if it.Name == val || it.Nickname == val {
+			return it
 		}
 	}
 	panic("Error:" + val)
 }
 
 func (x *LoadFromXxw) GetZzmmm(val string) string {
-	for _, it := range x.ZzmmList {
-		if it.Name == val || it.Nickname == val {
-			return it.Code
-		}
-	}
-	panic("Error:" + val)
+	return x.GetZzmm(val).Code
 }
 
-func (x *LoadFromXxw) GetZjlxm(val string) string {
+func (x *LoadFromXxw) GetZjlx(val string) *base.GftDictItem {
+	code := "1"
 	if len(val) == 18 {
-		return "1"
+		code = "1"
 	}
 	if val == "M427772(A)" || val == "M614972(9)" || val == "M899175(3)" {
-		return "6"
+		code = "6"
 	}
 	if val == "F229619072" || val == "L125494231" {
-		return "8"
+		code = "8"
 	}
 	for _, it := range x.ZjlxList {
-		if it.Name == val {
-			return it.Code
+		if it.Code == code {
+			return it
 		}
 	}
 	panic("Error:" + val)
 }
-
 func (x *LoadFromXxw) GetFloat(str string) float64 {
 	v, _ := strconv.ParseFloat(str, 32)
 	return v
@@ -180,6 +224,6 @@ func (x *LoadFromXxw) GetTime(str string) *time.Time {
 	if str == "" {
 		return nil
 	}
-	v, _ := time.Parse("20060102", str)
+	v := timex.ParseLocalUTC(str)
 	return &v
 }

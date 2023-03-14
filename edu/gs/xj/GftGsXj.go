@@ -7,6 +7,7 @@ import (
 	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/types"
 	"github.com/GongfuTea/gft-go/x"
+	"github.com/GongfuTea/gft-go/x/jsonx"
 )
 
 type GftGsXj struct {
@@ -22,6 +23,7 @@ type GftGsXj struct {
 	Nj                int            `bson:"nj" json:"nj,omitempty"`
 	Xz                float64        `bson:"xz" json:"xz,omitempty"`
 	Sfzh              string         `bson:"sfzh" json:"sfzh,omitempty"`
+	Zjlx              string         `bson:"zjlx" json:"zjlx,omitempty"`       // 证件类型
 	Zjlxm             string         `bson:"zjlxm" json:"zjlxm,omitempty"`     // 证件类型
 	Xb                string         `bson:"xb" json:"xb,omitempty"`           // 性别
 	Xbm               string         `bson:"xbm" json:"xbm,omitempty"`         // 性别
@@ -69,68 +71,16 @@ func (xj *GftGsXj) Diff(other *GftGsXj) map[string]types.GftTimelineDiff {
 
 		// println("val1,val2: ", val1, val2)
 		if !reflect.DeepEqual(val1.Interface(), val2.Interface()) {
-			// println("field", f, val1.Interface(), val1.String(), val2.Interface(), val2.String())
+			println(xj.Xm, f, val1.Interface(), val1.String(), val2.Interface(), val2.String())
 			diff[f] = types.GftTimelineDiff{val1.Interface(), val2.Interface()}
+			jsonx.PrintAsJson("diff", diff)
 
 			// if val2.String() == "441402197908292352" {
-			// 	jsonx.PrintAsJson("xj", xj)
+			// jsonx.PrintAsJson("diff", diff)
 			// 	jsonx.PrintAsJson("other", other)
 			// }
 		}
 	}
 
 	return diff
-}
-
-type GftGsXjList []*GftGsXj
-
-func (l GftGsXjList) Includes(it *GftGsXj) bool {
-	for _, x := range l {
-		if x.Xh == it.Xh {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (l GftGsXjList) FindByXh(xh string) *GftGsXj {
-	for _, x := range l {
-		if x.Xh == xh {
-			return x
-		}
-	}
-	return nil
-}
-
-func (l GftGsXjList) FindAdded(oldList GftGsXjList) (added GftGsXjList) {
-	added = make(GftGsXjList, 0)
-
-	for _, x := range l {
-		if !oldList.Includes(x) {
-			added = append(added, x)
-		}
-	}
-
-	return added
-}
-
-func (l GftGsXjList) FindRemoved(oldList GftGsXjList) GftGsXjList {
-	return oldList.FindAdded(l)
-}
-
-func (l GftGsXjList) FindUpdated(oldList GftGsXjList) (updated GftGsXjList) {
-	updated = make(GftGsXjList, 0)
-
-	for _, x := range l {
-		if old := oldList.FindByXh(x.Xh); old != nil {
-			diff := x.Diff(old)
-			if len(diff) > 0 {
-				x.TlDiff = diff
-				updated = append(updated, x)
-			}
-		}
-	}
-
-	return updated
 }

@@ -29,12 +29,17 @@ type Query[T types.IEntity] struct {
 	page   *int64
 	ctx    context.Context
 	coll   *mongo.Collection
+	sort   any
 }
 
 func (q Query[T]) One() (T, error) {
 	result := new(T)
 
 	opt := options.FindOne()
+
+	if q.sort != nil {
+		opt.SetSort(q.sort)
+	}
 
 	if err := q.coll.FindOne(q.ctx, q.filter, opt).Decode(result); err != nil {
 		return *new(T), fmt.Errorf("not found, %#v", err)
@@ -55,6 +60,10 @@ func (q *Query[T]) All() (results []T, err error) {
 
 	opt := options.Find()
 
+	if q.sort != nil {
+		opt.SetSort(q.sort)
+	}
+
 	if q.page != nil && q.size != nil {
 		opt.SetSkip(*q.page * *q.size)
 		opt.SetLimit(*q.size)
@@ -67,6 +76,11 @@ func (q *Query[T]) All() (results []T, err error) {
 
 	err = cur.All(q.ctx, &results)
 	return
+}
+
+func (q *Query[T]) SetSort(sort any) *Query[T] {
+	q.sort = sort
+	return q
 }
 
 func (q *Query[T]) Count() (int64, error) {
