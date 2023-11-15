@@ -15,6 +15,10 @@ type Xlsx struct {
 	CurSheet string
 }
 
+type GetRecordOptions struct {
+	LowerHeaderName bool
+}
+
 func OpenFile(filename string) *Xlsx {
 	x := &Xlsx{
 		Filename: filename,
@@ -72,4 +76,30 @@ func (x *Xlsx) TotalRows() int {
 		return len(rows)
 	}
 	return 0
+}
+
+func (x *Xlsx) GetRecords(opt *GetRecordOptions) (items []ItemMap) {
+	items = make([]ItemMap, 0)
+	rows, _ := x.GetRows(x.CurSheet, excelize.Options{RawCellValue: true})
+	cols := rows[0]
+	if opt != nil && opt.LowerHeaderName {
+		for i, c := range cols {
+			cols[i] = strings.ToLower(c)
+		}
+	}
+
+	for _, row := range rows[1:] {
+		item := make(ItemMap, len(cols))
+		rowLen := len(row)
+		for c, col := range cols {
+			val := ""
+			if rowLen > c {
+				val = row[c]
+			}
+			item[col] = val
+		}
+		items = append(items, item)
+	}
+
+	return items
 }

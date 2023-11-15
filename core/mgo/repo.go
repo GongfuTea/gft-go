@@ -66,6 +66,11 @@ func (repo MgoRepo[T]) Del(id string) (bool, error) {
 
 }
 
+func (repo MgoRepo[T]) DelAll() (*mongo.DeleteResult, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 300*time.Second)
+	return repo.Coll().DeleteMany(ctx, bson.D{})
+}
+
 func (repo MgoRepo[T]) IsExist(id string) (bool, error) {
 	if id == "" {
 		return false, nil

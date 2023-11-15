@@ -10,6 +10,31 @@ import (
 	"github.com/GongfuTea/gft-go/x/timex"
 )
 
+func Set转专业(xh string, diff map[string]types.GftTimelineDiff, rq time.Time, note string) {
+
+	ls, _ := GsXjRepo.FindByXh(xh)
+	println("ss", xh, len(ls))
+	if s := ls.FindByXhLastVersion(xh); s != nil {
+		jsonx.PrintAsJson("Set转专业", s)
+
+		// 修改旧记录
+		end1 := rq.Add(-time.Second)
+		s.TlEnd = &end1
+		GsXjRepo.Save(s)
+
+		s.UpdateByDiff(diff)
+		s.GftTimeline = types.GftTimeline{
+			TlStart:   &rq,
+			TlVersion: s.TlVersion + 1,
+			TlDiff:    diff,
+			TlNote:    note,
+		}
+		s.Id = fmt.Sprintf("%s-%d", s.Xh, s.TlVersion)
+		s.CreatedAt = time.Now()
+		GsXjRepo.Save(s)
+	}
+}
+
 func Set退学(xh string, txrq time.Time, note string) {
 	dqzt, _ := bmgo.DictItemRepo.FindByItemName("JY.XSDQZT", "退学")
 

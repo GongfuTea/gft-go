@@ -76,7 +76,7 @@ func delCmsNav(p graphql.ResolveParams) (interface{}, error) {
 
 var GfCmsNavType = gql.NewObjBuilder("GftCmsNav").
 	AddEntityTreeFields().
-	AddString("name", "content", "note", "createdAt", "type", "typeId", "state", "accessLevel").
+	AddString("name", "content", "note", "type", "typeId", "state", "accessLevel").
 	AddField(graphql.Boolean, "newWindow").
 	AddFloat("sortOrder").GetObj()
 

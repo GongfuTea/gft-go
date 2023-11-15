@@ -19,7 +19,9 @@ type DbTreeEntity struct {
 
 func (e *DbTreeEntity) Init() {
 	e.TreeEntity.Init()
-	e.CreatedAt = time.Now()
+	if e.CreatedAt.IsZero() {
+		e.CreatedAt = time.Now()
+	}
 
 	fmt.Printf("init DbTreeEntity, %+v\n", e)
 	fmt.Printf("init DbTreeEntity, %+v\n", e.Entity)

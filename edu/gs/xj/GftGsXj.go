@@ -47,6 +47,22 @@ type GftGsXj struct {
 	Meta              map[string]any `bson:"meta" json:"meta,omitempty"`
 }
 
+func (xj *GftGsXj) UpdateByDiff(diff map[string]types.GftTimelineDiff) {
+
+	el := reflect.ValueOf(xj).Elem()
+
+	for k, v := range diff {
+		jsonx.PrintAsJson("diff:"+k, v)
+
+		f := el.FieldByName(k)
+		if f.IsValid() {
+			if f.CanSet() {
+				f.Set(reflect.ValueOf(v[1]))
+			}
+		}
+	}
+}
+
 func (xj *GftGsXj) Diff(other *GftGsXj) map[string]types.GftTimelineDiff {
 	diff := make(map[string]types.GftTimelineDiff, 0)
 
@@ -71,9 +87,9 @@ func (xj *GftGsXj) Diff(other *GftGsXj) map[string]types.GftTimelineDiff {
 
 		// println("val1,val2: ", val1, val2)
 		if !reflect.DeepEqual(val1.Interface(), val2.Interface()) {
-			println(xj.Xm, f, val1.Interface(), val1.String(), val2.Interface(), val2.String())
-			diff[f] = types.GftTimelineDiff{val1.Interface(), val2.Interface()}
-			jsonx.PrintAsJson("diff", diff)
+			// println(xj.Xm, f, val1.Interface(), val1.String(), val2.Interface(), val2.String())
+			diff[f] = types.GftTimelineDiff{val2.Interface(), val1.Interface()}
+			jsonx.PrintAsJson("diff: "+xj.Xm, diff)
 
 			// if val2.String() == "441402197908292352" {
 			// jsonx.PrintAsJson("diff", diff)
