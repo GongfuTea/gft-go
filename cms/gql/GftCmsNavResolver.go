@@ -76,12 +76,14 @@ func delCmsNav(p graphql.ResolveParams) (interface{}, error) {
 
 var GfCmsNavType = gql.NewObjBuilder("GftCmsNav").
 	AddEntityTreeFields().
-	AddString("name", "content", "note", "type", "typeId", "state", "accessLevel").
+	AddString("name", "content", "note", "type", "state", "accessLevel").
+	AddStringList("targetIds").
 	AddField(graphql.Boolean, "newWindow").
 	AddFloat("sortOrder").GetObj()
 
 var GfCmsNavInput = gql.NewInputObjBuilder("GftCmsNavInput").
-	AddString("id", "pid", "note", "content", "type", "typeId", "state", "code").
+	AddString("id", "pid", "note", "content", "type", "state", "code").
+	AddStringList("targetIds").
 	AddNonNullString("name", "accessLevel").
 	AddField(graphql.Boolean, "newWindow").
 	AddFloat("sortOrder").GetObj()

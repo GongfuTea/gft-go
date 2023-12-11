@@ -6,9 +6,9 @@ import (
 )
 
 type GftCmsNavRepo struct {
-	*mgo.MgoRepo[*cms.GftCmsNav]
+	*mgo.MgoTreeRepo[*cms.GftCmsNav]
 }
 
 var CmsNavRepo = &GftCmsNavRepo{
-	mgo.NewMgoRepo[*cms.GftCmsNav]("GftCmsNav"),
+	mgo.NewMgoTreeRepo[*cms.GftCmsNav]("GftCmsNav"),
 }
