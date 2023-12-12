@@ -7,10 +7,10 @@ import (
 
 func QueryFields() graphql.Fields {
 
-	return gql.MergeFields(CmsCategoryResolver.Query, CmsPostResolver.Query, CmsNavResolver.Query, AppCmsResolver.Query)
+	return gql.MergeFields(CmsCategoryResolver.Query, CmsPostResolver.Query, CmsImageResolver.Query, CmsNavResolver.Query, AppCmsResolver.Query)
 }
 
 func MutationFields() graphql.Fields {
 
-	return gql.MergeFields(CmsCategoryResolver.Mutation, CmsPostResolver.Mutation, CmsNavResolver.Mutation, AppCmsResolver.Mutation)
+	return gql.MergeFields(CmsCategoryResolver.Mutation, CmsPostResolver.Mutation, CmsImageResolver.Mutation, CmsNavResolver.Mutation, AppCmsResolver.Mutation)
 }
