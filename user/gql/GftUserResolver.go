@@ -1,6 +1,7 @@
 package gql
 
 import (
+	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/GongfuTea/gft-go/user/mgo"
 	"github.com/graphql-go/graphql"
 )
@@ -15,7 +16,7 @@ var UserResolver = &GftUserResolver{
 
 	Mutation: graphql.Fields{
 		"login": &graphql.Field{
-			Type: graphql.String,
+			Type: GfAuthToken,
 			Args: graphql.FieldConfigArgument{
 				"username": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.String),
@@ -33,3 +34,6 @@ func login(p graphql.ResolveParams) (interface{}, error) {
 	pass := p.Args["password"].(string)
 	return mgo.UserRepo.Login(user, pass)
 }
+
+var GfAuthToken = gql.NewObjBuilder("GfAuthToken").
+	AddString("accessToken", "refreshToken").GetObj()

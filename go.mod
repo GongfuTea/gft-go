@@ -3,7 +3,7 @@ module github.com/GongfuTea/gft-go
 go 1.18
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.3.0
 	github.com/graphql-go/graphql v0.7.9
 	github.com/spf13/viper v1.8.1

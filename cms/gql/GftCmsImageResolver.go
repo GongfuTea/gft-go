@@ -76,13 +76,15 @@ func delDataImage(p graphql.ResolveParams) (interface{}, error) {
 
 var GfCmsImageType = gql.NewObjBuilder("GftCmsImage").
 	AddEntityFields().
-	AddString("name", "url", "note", "createdAt", "createdBy").
+	AddString("name", "type", "url", "note", "createdAt", "createdBy").
 	AddStringList("tags").
 	AddDateTime("publishDate").
+	AddInt("size").
 	AddFloat("sortOrder").GetObj()
 
 var GfCmsImageInput = gql.NewInputObjBuilder("GftCmsImageInput").
-	AddString("id", "name", "note").
+	AddString("id", "name", "type", "note").
 	AddNonNullString("url").
 	AddStringList("tags").
+	AddInt("size").
 	AddFloat("sortOrder").GetObj()

@@ -49,7 +49,7 @@ func (repo GftUserRepo) Create(username string, password string) (*user.GftUser,
 	return &user, nil
 }
 
-func (repo GftUserRepo) Login(username string, password string) (interface{}, error) {
+func (repo GftUserRepo) Login(username string, password string) (*auth.TokenDetails, error) {
 	var err error
 	var results user.GftUser
 
@@ -62,7 +62,7 @@ func (repo GftUserRepo) Login(username string, password string) (interface{}, er
 		return nil, fmt.Errorf("Invalid password.")
 	}
 
-	return auth.CreateToken(results.Id, results.Username)
+	return auth.CreateToken(results.Id)
 }
 
 func (repo GftUserRepo) Save(model user.GftUser) (*user.GftUser, error) {
