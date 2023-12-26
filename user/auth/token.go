@@ -18,11 +18,22 @@ type TokenDetails struct {
 }
 
 func CreateToken(userid string) (*TokenDetails, error) {
-	td := &TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
-	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
-
 	var err error
+
+	atExp, err := time.ParseDuration(viper.GetString("token.exp"))
+	if err != nil {
+		atExp = time.Minute * 15
+	}
+
+	rtExp, err := time.ParseDuration(viper.GetString("refreshToken.exp"))
+	if err != nil {
+		rtExp = time.Hour * 24 * 7
+	}
+
+	td := &TokenDetails{}
+	td.AtExpires = time.Now().Add(atExp).Unix()
+	td.RtExpires = time.Now().Add(rtExp).Unix()
+
 	//Creating Access Token
 	atClaims := jwt.MapClaims{}
 	atClaims["sub"] = userid
@@ -38,7 +49,7 @@ func CreateToken(userid string) (*TokenDetails, error) {
 	rtClaims["sub"] = userid
 	rtClaims["exp"] = td.RtExpires
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
-	td.RefreshToken, err = rt.SignedString([]byte(viper.GetString("token.secret")))
+	td.RefreshToken, err = rt.SignedString([]byte(viper.GetString("refreshToken.secret")))
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +76,7 @@ func RefreshToken(refreshToken string) (*TokenDetails, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(viper.GetString("token.secret")), nil
+		return []byte(viper.GetString("refreshToken.secret")), nil
 	})
 
 	if err != nil {
