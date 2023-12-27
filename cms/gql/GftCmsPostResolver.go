@@ -1,13 +1,21 @@
 package gql
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/cms/mgo"
+	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
+	"go.mongodb.org/mongo-driver/bson"
 )
+
+type GftCmsPostFilter struct {
+	db.PagerFilter
+	Category *string
+}
 
 type GftCmsPostResolver struct {
 	Query    graphql.Fields
@@ -17,8 +25,8 @@ type GftCmsPostResolver struct {
 var CmsPostResolver = &GftCmsPostResolver{
 	Query: graphql.Fields{
 		"cmsPosts": &graphql.Field{
-			Type:    graphql.NewList(GfCmsPostType),
-			Args:    graphql.FieldConfigArgument{},
+			Type:    GfCmsPostFilterResp,
+			Args:    gql.NewArgFilter(graphql.NewNonNull(GfCmsPostFilter)),
 			Resolve: dataPosts,
 		},
 		"cmsPost": &graphql.Field{
@@ -57,7 +65,14 @@ func saveDataPost(p graphql.ResolveParams) (interface{}, error) {
 
 func dataPosts(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
-	return mgo.CmsPostRepo.All()
+	filter, _ := gql.GqlParseFilter(p, new(GftCmsPostFilter))
+	if filter.Category == nil {
+		return mgo.CmsPostRepo.Find(context.Background(), bson.M{}).Page(&filter.PagerFilter)
+	} else if *filter.Category == "" {
+		return mgo.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": []string{}}).Page(&filter.PagerFilter)
+	} else {
+		return mgo.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": *filter.Category}).Page(&filter.PagerFilter)
+	}
 }
 
 func dataPost(p graphql.ResolveParams) (interface{}, error) {
@@ -89,3 +104,10 @@ var GfCmsPostInput = gql.NewInputObjBuilder("GftCmsPostInput").
 	AddDateTime("publishDate").
 	AddField(graphql.Boolean, "newWindow").
 	AddFloat("sortOrder").GetObj()
+
+var GfCmsPostFilter = gql.NewInputObjBuilder("GfCmsPostFilter").
+	AddInt("page", "size").AddString("category").GetObj()
+
+var GfCmsPostFilterResp = gql.NewObjBuilder("GfCmsPostFilterResp").
+	AddField(graphql.NewList(GfCmsPostType), "items").
+	AddInt("total").GetObj()
