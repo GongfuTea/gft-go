@@ -3,6 +3,7 @@ module github.com/GongfuTea/gft-go
 go 1.18
 
 require (
+	github.com/benweissmann/memongo v0.1.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.3.0
 	github.com/graphql-go/graphql v0.7.9
@@ -13,6 +14,7 @@ require (
 )
 
 require (
+	github.com/acobaugh/osrelease v0.0.0-20181218015638-a93a0a55a249 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

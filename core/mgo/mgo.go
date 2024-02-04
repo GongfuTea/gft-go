@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/benweissmann/memongo"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,6 +17,11 @@ type Mgo struct {
 var DefaultMongo = &Mgo{}
 
 func OpenMongo() *Mgo {
+	version := viper.GetString("mongo.memongo")
+	if version != "" {
+		return openMemongo()
+	}
+
 	host := viper.GetString("mongo.uri")
 	db := viper.GetString("mongo.db")
 	username := viper.GetString("mongo.username")
@@ -34,6 +40,24 @@ func OpenMongo() *Mgo {
 		log.Fatal(err)
 	}
 	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	DefaultMongo.session = client
+	return DefaultMongo
+}
+
+func openMemongo() *Mgo {
+	version := viper.GetString("mongo.memongo")
+
+	mongoServer, err := memongo.Start(version)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer mongoServer.Stop()
+
+	log.Println(mongoServer.URI())
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoServer.URI()))
 	if err != nil {
 		log.Fatal(err)
 	}
