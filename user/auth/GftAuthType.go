@@ -1,10 +1,10 @@
-package user
+package auth
 
 import (
 	"time"
 )
 
-type GftUserAuthType struct {
+type GftAuthType struct {
 	Type      string                 `bson:"type" json:"type"`
 	Identity  string                 `bson:"identity" json:"identity"`
 	Meta      map[string]interface{} `bson:"meta" json:"meta"`
