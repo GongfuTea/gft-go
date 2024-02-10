@@ -1,56 +1,34 @@
 package handlers
 
 import (
-	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/GongfuTea/gft-go/user/admin"
-	"github.com/graphql-go/graphql"
+	"github.com/GongfuTea/gft-go/user/auth"
 )
 
 type AdminResolver struct {
 }
 
-func (r *AdminResolver) CreateAdmin() {
-}
-
-func (r *AdminResolver) UpdateAdmin() {
-}
-
-func (r *AdminResolver) FindAdmins() {
-}
-
-func (r *AdminResolver) QueryFields() graphql.Fields {
-	var fields = graphql.Fields{}
-
-	// for k, v := range UserResolver.Query {
-	// 	fields[k] = v
-	// }
-	return fields
-}
-
-func (r *AdminResolver) MutationFields() graphql.Fields {
-	var fields = graphql.Fields{
-		"adminLogin": &graphql.Field{
-			Type: GfAuthToken,
-			Args: graphql.FieldConfigArgument{
-				"username": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				},
-				"password": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				}},
-			Resolve: r.login,
-		},
-	}
-
-	return fields
-}
-
-func (r *AdminResolver) login(p graphql.ResolveParams) (interface{}, error) {
-	println("sss")
-	user := p.Args["username"].(string)
-	pass := p.Args["password"].(string)
+func (r *AdminResolver) AdminLogin(cmd AdminLoginCmd) (*auth.TokenDetails, error) {
+	user := cmd.Username
+	pass := cmd.Password
 	return admin.AdminRepo.Login(user, pass)
 }
 
-var GfAuthToken = gql.NewObjBuilder("GfAuthToken2").
-	AddString("accessToken", "refreshToken").GetObj()
+func (r *AdminResolver) AdminLogin2(cmd AdminLoginQuery) (*AdminLoginQueryResp, error) {
+	return nil, nil
+}
+
+type AdminLoginCmd struct {
+	Username string `json:"username,omitempty"`
+	Password string `json:"password"`
+}
+
+type AdminLoginQuery struct {
+	Username string `json:"username,omitempty"`
+	Password string `json:"password"`
+}
+
+type AdminLoginQueryResp struct {
+	Username string `json:"username,omitempty"`
+	Password string `json:"password"`
+}
