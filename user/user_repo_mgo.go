@@ -1,4 +1,4 @@
-package mgo
+package user
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/GongfuTea/gft-go/core/mgo"
-	"github.com/GongfuTea/gft-go/user"
 	"github.com/GongfuTea/gft-go/user/auth"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,15 +13,15 @@ import (
 )
 
 type GftUserRepo struct {
-	*mgo.MgoRepo[*user.GftUser]
+	*mgo.MgoRepo[*GftUser]
 }
 
 var UserRepo = &GftUserRepo{
-	mgo.NewMgoRepo[*user.GftUser]("GftUser"),
+	mgo.NewMgoRepo[*GftUser]("GftUser"),
 }
 
-func (repo GftUserRepo) Create(username string, password string) (*user.GftUser, error) {
-	var user user.GftUser
+func (repo GftUserRepo) Create(username string, password string) (*GftUser, error) {
+	var user GftUser
 
 	q := bson.M{"username": username}
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
@@ -51,7 +50,7 @@ func (repo GftUserRepo) Create(username string, password string) (*user.GftUser,
 
 func (repo GftUserRepo) Login(username string, password string) (*auth.TokenDetails, error) {
 	var err error
-	var results user.GftUser
+	var results GftUser
 
 	q := bson.M{"username": username}
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
@@ -65,7 +64,7 @@ func (repo GftUserRepo) Login(username string, password string) (*auth.TokenDeta
 	return auth.CreateToken(results.Id)
 }
 
-func (repo GftUserRepo) Save(model user.GftUser) (*user.GftUser, error) {
+func (repo GftUserRepo) Save(model GftUser) (*GftUser, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
 
@@ -87,8 +86,8 @@ func (repo GftUserRepo) Save(model user.GftUser) (*user.GftUser, error) {
 
 }
 
-func (repo GftUserRepo) All() ([]user.GftUser, error) {
-	var results []user.GftUser
+func (repo GftUserRepo) All() ([]GftUser, error) {
+	var results []GftUser
 	var err error
 
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
@@ -97,7 +96,7 @@ func (repo GftUserRepo) All() ([]user.GftUser, error) {
 		return nil, err
 	}
 	for cur.Next(ctx) {
-		var elem user.GftUser
+		var elem GftUser
 		err = cur.Decode(&elem)
 		if err != nil {
 			return nil, err

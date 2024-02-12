@@ -9,9 +9,7 @@ func QueryFields() graphql.Fields {
 	for k, v := range AuthResourceResolver.Query {
 		fields[k] = v
 	}
-	for k, v := range UserResolver.Query {
-		fields[k] = v
-	}
+
 	return fields
 }
 
@@ -20,8 +18,6 @@ func MutationFields() graphql.Fields {
 	for k, v := range AuthResourceResolver.Mutation {
 		fields[k] = v
 	}
-	for k, v := range UserResolver.Mutation {
-		fields[k] = v
-	}
+
 	return fields
 }
