@@ -9,10 +9,14 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-var DefaultSchemaEngine *SchemaEngine = &SchemaEngine{}
+var DefaultSchemaEngine *SchemaEngine = &SchemaEngine{
+	outputMap: map[reflect.Type]graphql.Output{},
+}
 
 type SchemaEngine struct {
 	resolvers []interface{}
+
+	outputMap map[reflect.Type]graphql.Output
 }
 
 func (s *SchemaEngine) AddResolver(resolver interface{}) {
@@ -22,8 +26,8 @@ func (s *SchemaEngine) AddResolver(resolver interface{}) {
 func (s *SchemaEngine) GenerateSchema() graphql.Schema {
 	var query, mutation = s.getFields()
 	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-		Query:    graphql.NewObject(graphql.ObjectConfig{Name: "RootQuery", Fields: query}),
-		Mutation: graphql.NewObject(graphql.ObjectConfig{Name: "RootMutation", Fields: mutation}),
+		Query:    graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: query}),
+		Mutation: graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: mutation}),
 	})
 	return schema
 }
@@ -31,46 +35,30 @@ func (s *SchemaEngine) GenerateSchema() graphql.Schema {
 func (s *SchemaEngine) getFields() (graphql.Fields, graphql.Fields) {
 	var mutation = graphql.Fields{}
 	var query = graphql.Fields{}
-
 	for _, r := range s.resolvers {
-		cmds := s.getMethods(r, "Cmd")
-		for _, cmd := range cmds {
-			fmt.Printf("cmd: %+v\n", cmd.Name)
+		t := reflect.TypeOf(r)
+		for i := 0; i < t.NumMethod(); i++ {
+			method := t.Method(i)
+			if method.Type.NumIn() == 2 { // one argument + receiver
+				argType1 := method.Type.In(1) // 0 is the receiver
+				// fmt.Printf("argType1: %+v\n", argType1.PkgPath())
+				methodName := strings.ToLower(string(method.Name[0])) + method.Name[1:]
 
-			cmdName := strings.ToLower(string(cmd.Name[0])) + cmd.Name[1:]
-			mutation[cmdName] = s.genFieldFromMethod(r, cmd)
-		}
-
-		queries := s.getMethods(r, "Query")
-		for _, cmd := range queries {
-			fmt.Printf("Query: %+v\n", cmd.Name)
-			cmdName := strings.ToLower(string(cmd.Name[0])) + cmd.Name[1:]
-			query[cmdName] = s.genFieldFromMethod(r, cmd)
+				if strings.HasSuffix(argType1.PkgPath(), "commands") {
+					mutation[methodName] = s.genFieldFromMethod(r, method)
+				} else if strings.HasSuffix(argType1.PkgPath(), "queries") {
+					query[methodName] = s.genFieldFromMethod(r, method)
+				}
+			}
 		}
 	}
 	return query, mutation
 }
 
-func (s *SchemaEngine) getMethods(r any, typ string) (methods []reflect.Method) {
-	t := reflect.TypeOf(r)
-	for i := 0; i < t.NumMethod(); i++ {
-		method := t.Method(i)
-		fmt.Println("xx", method.Name, method.Type.NumIn())
-
-		if method.Type.NumIn() == 2 { // one argument + receiver
-			argType1 := method.Type.In(1) // 0 is the receiver
-			if strings.HasSuffix(argType1.Name(), typ) {
-				methods = append(methods, method)
-			}
-		}
-	}
-	return
-}
-
 func (s *SchemaEngine) genFieldFromMethod(resolver any, m reflect.Method) *graphql.Field {
 	inputType := m.Type.In(1)
-	inputArgs := s.genFieldConfig(inputType)
-	outputType := s.genOutputObject(m.Type.Out(0).Elem())
+	inputArgs := s.getInputFieldConfig(inputType)
+	outputType := s.genOutput(m.Type.Out(0))
 
 	return &graphql.Field{
 		Type: outputType,
@@ -102,7 +90,8 @@ func (s *SchemaEngine) convertResolveParams(t reflect.Type, p graphql.ResolvePar
 	return newObj.Elem().Interface(), nil
 }
 
-func (s *SchemaEngine) genOutputObject(t reflect.Type) *graphql.Object {
+func (s *SchemaEngine) getGqlFields(t reflect.Type) graphql.Fields {
+
 	fields := graphql.Fields{}
 
 	for i := 0; i < t.NumField(); i++ {
@@ -134,10 +123,36 @@ func (s *SchemaEngine) genOutputObject(t reflect.Type) *graphql.Object {
 		}
 	}
 
-	return graphql.NewObject(graphql.ObjectConfig{
-		Name:   t.Name(),
-		Fields: fields,
-	})
+	return fields
+}
+
+func (s *SchemaEngine) genOutput(t reflect.Type) graphql.Output {
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
+	if obj, ok := s.outputMap[t]; ok {
+		// fmt.Printf("\n\n\n\n\nFound object in cache: %s\n\n\n\n\n", t.Name())
+		return obj
+	}
+
+	switch t.Kind() {
+	case reflect.Bool:
+		s.outputMap[t] = graphql.Boolean
+
+	case reflect.Struct:
+		fields := s.getGqlFields(t)
+		s.outputMap[t] = graphql.NewObject(graphql.ObjectConfig{
+			Name:   t.Name(),
+			Fields: fields,
+		})
+
+	default:
+		fmt.Printf("\n\n\n\n\nUnsupported type for object %s\n\n\n\n\n\n", t.Name())
+		panic("Unsupported type " + t.Name())
+	}
+
+	return s.outputMap[t]
 }
 
 func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
@@ -182,7 +197,10 @@ func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
 	})
 }
 
-func (s *SchemaEngine) genFieldConfig(t reflect.Type) graphql.FieldConfigArgument {
+func (s *SchemaEngine) getInputFieldConfig(t reflect.Type) graphql.FieldConfigArgument {
+
+	fmt.Printf("Type: %+v\n", t)
+
 	args := graphql.FieldConfigArgument{}
 
 	for i := 0; i < t.NumField(); i++ {
@@ -202,7 +220,7 @@ func (s *SchemaEngine) genFieldConfig(t reflect.Type) graphql.FieldConfigArgumen
 			jsonTag = fieldName
 		}
 
-		var graphqlType graphql.Output
+		var graphqlType graphql.Input
 		switch fieldType.Kind() {
 		case reflect.String:
 			graphqlType = graphql.String
