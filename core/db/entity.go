@@ -13,7 +13,7 @@ type IDbEntity interface {
 }
 
 type DbEntity struct {
-	types.Entity `bson:",inline"`
+	types.Entity `bson:",inline" json:",inline"`
 	CreatedAt    time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
 }
 
