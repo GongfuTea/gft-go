@@ -10,7 +10,7 @@ type ITreeEntity interface {
 }
 
 type TreeEntity struct {
-	Entity `bson:",inline"`
+	Entity `bson:",inline" json:",inline"`
 	Pid    string `bson:"pid,omitempty" json:"pid,omitempty"`
 	Code   string `bson:"code" json:"code,omitempty"`
 	Mpath  string `bson:"mpath" json:"mpath,omitempty"`

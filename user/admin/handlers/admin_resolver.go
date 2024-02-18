@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/GongfuTea/gft-go/user/admin"
 	"github.com/GongfuTea/gft-go/user/admin/commands"
 	"github.com/GongfuTea/gft-go/user/admin/queries"
@@ -13,6 +15,8 @@ type AdminResolver struct {
 func (r *AdminResolver) AdminLogin(cmd commands.AdminLogin) (*auth.TokenDetails, error) {
 	user := cmd.Username
 	pass := cmd.Password
+	fmt.Printf("user: %s, %s", user, pass)
+
 	return admin.AdminRepo.Login(user, pass)
 }
 

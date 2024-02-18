@@ -5,7 +5,7 @@ import (
 )
 
 type GftAuthResource struct {
-	db.DbTreeEntity `bson:",inline"`
+	db.DbTreeEntity `bson:",inline" json:",inline"`
 	Name            string             `bson:"name" json:"name,omitempty"`
 	Category        string             `bson:"category" json:"category,omitempty"`
 	Operations      []GftAuthOperation `bson:"operations" json:"operations"`

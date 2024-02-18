@@ -10,13 +10,15 @@ import (
 )
 
 var DefaultSchemaEngine *SchemaEngine = &SchemaEngine{
-	outputMap: map[reflect.Type]graphql.Output{},
+	outputMap: make(map[reflect.Type]*graphql.Object),
+	inputMap:  make(map[reflect.Type]*graphql.InputObject),
 }
 
 type SchemaEngine struct {
 	resolvers []interface{}
 
-	outputMap map[reflect.Type]graphql.Output
+	outputMap map[reflect.Type]*graphql.Object
+	inputMap  map[reflect.Type]*graphql.InputObject
 }
 
 func (s *SchemaEngine) AddResolver(resolver interface{}) {
@@ -90,15 +92,21 @@ func (s *SchemaEngine) convertResolveParams(t reflect.Type, p graphql.ResolvePar
 	return newObj.Elem().Interface(), nil
 }
 
-func (s *SchemaEngine) getGqlFields(t reflect.Type) graphql.Fields {
-
+func (s *SchemaEngine) genOutputFields(t reflect.Type) graphql.Fields {
 	fields := graphql.Fields{}
-
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
 		jsonTag := field.Tag.Get("json")
 		fieldName := field.Name
 		fieldType := field.Type
+
+		if jsonTag == ",inline" {
+			inlineFileds := s.genOutputFields(fieldType)
+			for k, v := range inlineFileds {
+				fields[k] = v
+			}
+			continue
+		}
 
 		// If json tag is not present, use the field name
 		if jsonTag == "" {
@@ -109,21 +117,51 @@ func (s *SchemaEngine) getGqlFields(t reflect.Type) graphql.Fields {
 
 		var graphqlType graphql.Output
 		switch fieldType.Kind() {
-		case reflect.String:
-			graphqlType = graphql.String
-		case reflect.Int:
-			graphqlType = graphql.Int
+		case reflect.String, reflect.Int, reflect.Float32, reflect.Float64, reflect.Bool, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			graphqlType = mapGraphqlType(fieldType)
+		case reflect.Struct:
+			if fieldType.Name() == "Time" {
+				graphqlType = graphql.String
+			} else {
+				graphqlType = s.genOutputObject(fieldType)
+			}
+		case reflect.Slice:
+			graphqlType = graphql.NewList(s.genOutput(fieldType.Elem()))
 		// Add more cases as needed
 		default:
+			fmt.Printf("[genOutputObject] Unsupported type for field %s %s\n", fieldType.Name(), jsonTag)
 			continue
 		}
 
 		fields[jsonTag] = &graphql.Field{
 			Type: graphqlType,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				v := reflect.ValueOf(p.Source)
+				if v.Kind() == reflect.Ptr {
+					v = v.Elem()
+				}
+				field1Val := v.FieldByName(fieldName)
+				if field1Val.IsValid() {
+					return field1Val.Interface(), nil
+				}
+				return nil, nil
+			},
 		}
 	}
-
 	return fields
+}
+
+func (s *SchemaEngine) genOutputObject(t reflect.Type) *graphql.Object {
+	if obj, ok := s.outputMap[t]; ok {
+		return obj
+	}
+
+	s.outputMap[t] = graphql.NewObject(graphql.ObjectConfig{
+		Name:   t.Name(),
+		Fields: s.genOutputFields(t),
+	})
+
+	return s.outputMap[t]
 }
 
 func (s *SchemaEngine) genOutput(t reflect.Type) graphql.Output {
@@ -131,32 +169,27 @@ func (s *SchemaEngine) genOutput(t reflect.Type) graphql.Output {
 		t = t.Elem()
 	}
 
-	if obj, ok := s.outputMap[t]; ok {
-		// fmt.Printf("\n\n\n\n\nFound object in cache: %s\n\n\n\n\n", t.Name())
-		return obj
-	}
-
 	switch t.Kind() {
-	case reflect.Bool:
-		s.outputMap[t] = graphql.Boolean
+	case reflect.String, reflect.Int, reflect.Float32, reflect.Float64, reflect.Bool, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return mapGraphqlType(t)
 
 	case reflect.Struct:
-		fields := s.getGqlFields(t)
-		s.outputMap[t] = graphql.NewObject(graphql.ObjectConfig{
-			Name:   t.Name(),
-			Fields: fields,
-		})
+		return s.genOutputObject(t)
+
+	case reflect.Slice:
+		return graphql.NewList(s.genOutput(t.Elem()))
 
 	default:
 		fmt.Printf("\n\n\n\n\nUnsupported type for object %s\n\n\n\n\n\n", t.Name())
-		panic("Unsupported type " + t.Name())
+		panic("[genOutput] Unsupported type " + t.Name())
 	}
 
-	return s.outputMap[t]
 }
 
-func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
-	t := reflect.TypeOf(obj)
+func (s *SchemaEngine) genInputFields(t reflect.Type) graphql.InputObjectConfigFieldMap {
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
 
 	fields := graphql.InputObjectConfigFieldMap{}
 
@@ -166,7 +199,13 @@ func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
 		fieldName := field.Name
 		fieldType := field.Type
 
-		// If json tag is not present, use the field name
+		if jsonTag == ",inline" {
+			inlineFileds := s.genInputFields(fieldType)
+			for k, v := range inlineFileds {
+				fields[k] = v
+			}
+			continue
+		}
 		if jsonTag == "" {
 			jsonTag = fieldName
 		} else {
@@ -175,14 +214,21 @@ func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
 
 		var graphqlType graphql.Input
 		switch fieldType.Kind() {
-		case reflect.String:
-			graphqlType = graphql.String
-		case reflect.Int:
-			graphqlType = graphql.Int
+		case reflect.String, reflect.Int, reflect.Float32, reflect.Float64, reflect.Bool, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			graphqlType = mapGraphqlType(fieldType)
 		case reflect.Struct:
-			graphqlType = s.genInputObject(fieldType)
-		// Add more cases as needed
+			if fieldType.Name() == "Time" {
+				graphqlType = graphql.String
+			} else {
+				graphqlType = s.genInputObject(fieldType)
+			}
+		case reflect.Slice:
+			graphqlType = graphql.NewList(s.genInputObject(fieldType.Elem()))
+
+			// Add more cases as needed
+
 		default:
+			fmt.Printf("[genInputObject] Unsupported type for field %s %s\n", fieldType.Name(), jsonTag)
 			continue
 		}
 
@@ -191,10 +237,20 @@ func (s *SchemaEngine) genInputObject(obj interface{}) *graphql.InputObject {
 		}
 	}
 
-	return graphql.NewInputObject(graphql.InputObjectConfig{
-		Name:   t.Name(),
-		Fields: fields,
+	return fields
+}
+
+func (s *SchemaEngine) genInputObject(t reflect.Type) *graphql.InputObject {
+	if obj, ok := s.inputMap[t]; ok {
+		return obj
+	}
+
+	s.inputMap[t] = graphql.NewInputObject(graphql.InputObjectConfig{
+		Name:   t.Name() + "Input",
+		Fields: s.genInputFields(t),
 	})
+
+	return s.inputMap[t]
 }
 
 func (s *SchemaEngine) getInputFieldConfig(t reflect.Type) graphql.FieldConfigArgument {
@@ -222,13 +278,16 @@ func (s *SchemaEngine) getInputFieldConfig(t reflect.Type) graphql.FieldConfigAr
 
 		var graphqlType graphql.Input
 		switch fieldType.Kind() {
-		case reflect.String:
-			graphqlType = graphql.String
-		case reflect.Int:
-			graphqlType = graphql.Int
+		case reflect.String, reflect.Int, reflect.Float32, reflect.Float64, reflect.Bool, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			graphqlType = mapGraphqlType(fieldType)
+
+		case reflect.Struct:
+			graphqlType = s.genInputObject(fieldType)
+		case reflect.Slice:
+			graphqlType = graphql.NewList(s.genInputObject(fieldType.Elem()))
 		// Add more cases as needed
 		default:
-			fmt.Printf("Unsupported type for field %s\n", jsonTag)
+			fmt.Printf("[getInputFieldConfig] Unsupported type for field %s %s\n", fieldType.Name(), jsonTag)
 			continue
 		}
 
@@ -242,4 +301,24 @@ func (s *SchemaEngine) getInputFieldConfig(t reflect.Type) graphql.FieldConfigAr
 		}
 	}
 	return args
+}
+
+func mapGraphqlType(t reflect.Type) *graphql.Scalar {
+	switch t.Kind() {
+	case reflect.String:
+		return graphql.String
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return graphql.Int
+
+	case reflect.Float32, reflect.Float64:
+		return graphql.Float
+
+	case reflect.Bool:
+		return graphql.Boolean
+
+	// Add more cases as needed
+	default:
+		fmt.Printf("[mapGraphqlType] Unsupported type for field %s\n", t.Name())
+		return nil
+	}
 }

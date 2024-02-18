@@ -13,7 +13,7 @@ type IDbTreeEntity interface {
 }
 
 type DbTreeEntity struct {
-	types.TreeEntity `bson:",inline"`
+	types.TreeEntity `bson:",inline" json:",inline"`
 	CreatedAt        time.Time `bson:"createdAt,omitempty" json:"createdAt,omitempty"`
 }
 
