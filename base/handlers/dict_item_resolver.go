@@ -36,3 +36,7 @@ func (r *DictItemResolver) SaveDictItem(cmd commands.SaveDictItem) (string, erro
 func (r *DictItemResolver) DictItems(q queries.DictItems) ([]*base.GftDictItem, error) {
 	return base.DictItemRepo.FindByCategoryId(q.CategoryId)
 }
+
+func (r *DictCategoryResolver) DelDictItem(cmd commands.DelDictItem) (bool, error) {
+	return base.DictItemRepo.Del(cmd.Id)
+}
