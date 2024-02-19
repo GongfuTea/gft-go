@@ -1,24 +1,36 @@
 package handlers
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/GongfuTea/gft-go/user/auth"
 	"github.com/GongfuTea/gft-go/user/auth/commands"
 	"github.com/GongfuTea/gft-go/user/auth/queries"
+	"github.com/google/uuid"
 )
 
 type ResourceResolver struct {
 }
 
-func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (*auth.GftAuthResource, error) {
-	res, err := auth.AuthResourceRepo.Save(&cmd.Input)
-	if err != nil {
-		fmt.Printf("save resource err, %+v", err)
-	} else {
-		fmt.Printf("save resource, %+v", res)
+func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (string, error) {
+	if cmd.Id != "" {
+		_, err := auth.AuthResourceRepo.UpdateById(cmd.Id, cmd.Input)
+		return cmd.Id, err
 	}
-	return res, err
+
+	res := auth.GftAuthResource{
+		Name:       cmd.Input.Name,
+		Category:   cmd.Input.Category,
+		Operations: cmd.Input.Operations,
+		SortOrder:  cmd.Input.SortOrder,
+	}
+	res.Id = uuid.NewString()
+	res.Pid = cmd.Input.Pid
+	res.Code = cmd.Input.Code
+	res.CreatedAt = time.Now()
+
+	_, err := auth.AuthResourceRepo.Save(&res)
+	return res.Id, err
 }
 
 func (r *ResourceResolver) AuthResources(cmd queries.AuthResources) ([]auth.GftAuthResource, error) {

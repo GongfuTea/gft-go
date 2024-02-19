@@ -53,6 +53,14 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 	return model, err
 }
 
+func (repo MgoRepo[T]) UpdateById(id string, m any) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	_, err := repo.Coll().UpdateByID(ctx, id, bson.M{"$set": m})
+	return err == nil, err
+}
+
 func (repo MgoRepo[T]) Del(id string) (bool, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
