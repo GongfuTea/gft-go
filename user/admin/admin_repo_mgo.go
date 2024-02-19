@@ -35,8 +35,7 @@ func (repo GftAdminRepo) Create(username string, password string) (*GftAdmin, er
 	}
 
 	admin.Id = uuid.NewString()
-	t := time.Now()
-	admin.CreatedAt = &t
+	admin.CreatedAt = time.Now()
 	admin.Username = username
 	admin.Password = pass
 
@@ -70,8 +69,7 @@ func (repo GftAdminRepo) Save(model GftAdmin) (*GftAdmin, error) {
 
 	if model.Id == "" {
 		model.Id = uuid.NewString()
-		t := time.Now()
-		model.CreatedAt = &t
+		model.CreatedAt = time.Now()
 		_, err = repo.Coll().InsertOne(ctx, model)
 
 	} else {

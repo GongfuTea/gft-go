@@ -12,6 +12,14 @@ import (
 type ResourceResolver struct {
 }
 
+func (r *ResourceResolver) AuthResources(q queries.AuthResources) ([]auth.GftAuthResource, error) {
+	return auth.AuthResourceRepo.All()
+}
+
+func (r *ResourceResolver) AuthResource(q queries.AuthResource) (*auth.GftAuthResource, error) {
+	return auth.AuthResourceRepo.Get(q.Id)
+}
+
 func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (string, error) {
 	if cmd.Id != "" {
 		_, err := auth.AuthResourceRepo.UpdateById(cmd.Id, cmd.Input)
@@ -31,10 +39,6 @@ func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (stri
 
 	_, err := auth.AuthResourceRepo.Save(&res)
 	return res.Id, err
-}
-
-func (r *ResourceResolver) AuthResources(cmd queries.AuthResources) ([]auth.GftAuthResource, error) {
-	return auth.AuthResourceRepo.All()
 }
 
 func (r *ResourceResolver) DelAuthResource(cmd commands.DelAuthResource) (bool, error) {
