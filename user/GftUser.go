@@ -8,7 +8,7 @@ import (
 )
 
 type GftUser struct {
-	db.DbEntity `bson:",inline"`
+	db.DbEntity `bson:",inline" json:",inline"`
 	Name        string             `bson:"name" json:"name"`
 	Avatar      string             `bson:"avatar" json:"avatar"`
 	Username    string             `bson:"username" json:"username"`

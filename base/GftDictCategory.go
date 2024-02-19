@@ -5,7 +5,7 @@ import (
 )
 
 type GftDictCategory struct {
-	db.DbTreeEntity `bson:",inline"`
+	db.DbTreeEntity `bson:",inline" json:",inline"`
 	Name            string  `bson:"name" json:"name"`
 	SortOrder       float32 `bson:"sortOrder" json:"sortOrder"`
 	Note            string  `bson:"note" json:"note"`

@@ -61,7 +61,7 @@ func (repo GftAuthResourceRepo) All() ([]GftAuthResource, error) {
 		return nil, err
 	}
 	cur.Close(ctx)
-	return results, nil
+	return results, nil 
 }
 
 // func (repo GftAuthResourceRepo) Get(id string) (*auth.GftAuthResource, error) {

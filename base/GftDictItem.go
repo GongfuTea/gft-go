@@ -5,7 +5,7 @@ import (
 )
 
 type GftDictItem struct {
-	db.DbEntity `bson:",inline"`
+	db.DbEntity `bson:",inline" json:",inline"`
 	CategoryId  string  `bson:"categoryId" json:"categoryId"`
 	Code        string  `bson:"code" json:"code"`
 	Name        string  `bson:"name" json:"name"`
