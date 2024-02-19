@@ -5,7 +5,7 @@ import (
 )
 
 type GftCmsImage struct {
-	db.DbEntity `bson:",inline"`
+	db.DbEntity `bson:",inline" json:",inline"`
 	Name        string   `bson:"name" json:"name"`
 	Type        string   `bson:"type" json:"type"`
 	Size        int      `bson:"size" json:"size"`

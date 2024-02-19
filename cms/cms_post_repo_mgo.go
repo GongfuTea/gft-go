@@ -1,14 +1,13 @@
-package mgo
+package cms
 
 import (
-	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/core/mgo"
 )
 
 type GftCmsPostRepo struct {
-	*mgo.MgoRepo[*cms.GftCmsPost]
+	*mgo.MgoRepo[*GftCmsPost]
 }
 
 var CmsPostRepo = &GftCmsPostRepo{
-	mgo.NewMgoRepo[*cms.GftCmsPost]("GftCmsPost"),
+	mgo.NewMgoRepo[*GftCmsPost]("GftCmsPost"),
 }

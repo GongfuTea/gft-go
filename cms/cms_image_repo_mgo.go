@@ -1,14 +1,13 @@
-package mgo
+package cms
 
 import (
-	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/core/mgo"
 )
 
 type GftCmsImageRepo struct {
-	*mgo.MgoRepo[*cms.GftCmsImage]
+	*mgo.MgoRepo[*GftCmsImage]
 }
 
 var CmsImageRepo = &GftCmsImageRepo{
-	mgo.NewMgoRepo[*cms.GftCmsImage]("GftCmsImage"),
+	mgo.NewMgoRepo[*GftCmsImage]("GftCmsImage"),
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type GftCmsPost struct {
-	db.DbEntity  `bson:",inline"`
+	db.DbEntity  `bson:",inline" json:",inline"`
 	Title        string      `bson:"title" json:"title"`
 	SubTitle     *string     `bson:"subTitle" json:"subTitle,omitempty"`
 	Abstract     *string     `bson:"abstract" json:"abstract,omitempty"`

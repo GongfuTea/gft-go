@@ -5,7 +5,7 @@ import (
 )
 
 type GftCmsNav struct {
-	db.DbTreeEntity `bson:",inline"`
+	db.DbTreeEntity `bson:",inline" json:",inline"`
 	Name            string    `bson:"name" json:"name,omitempty"`
 	SortOrder       float32   `bson:"sortOrder" json:"sortOrder,omitempty"`
 	Content         string    `bson:"content" json:"content"`

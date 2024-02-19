@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/GongfuTea/gft-go/cms"
-	"github.com/GongfuTea/gft-go/cms/mgo"
 	"github.com/GongfuTea/gft-go/core/db"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
@@ -60,18 +59,18 @@ func saveDataPost(p graphql.ResolveParams) (interface{}, error) {
 	}
 	fmt.Printf("save Post, %+v", item)
 
-	return mgo.CmsPostRepo.Save(item)
+	return cms.CmsPostRepo.Save(item)
 }
 
 func dataPosts(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	filter, _ := gql.GqlParseFilter(p, new(GftCmsPostFilter))
 	if filter.Category == nil {
-		return mgo.CmsPostRepo.Find(context.Background(), bson.M{}).Page(&filter.PagerFilter)
+		return cms.CmsPostRepo.Find(context.Background(), bson.M{}).Page(&filter.PagerFilter)
 	} else if *filter.Category == "" {
-		return mgo.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": []string{}}).Page(&filter.PagerFilter)
+		return cms.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": []string{}}).Page(&filter.PagerFilter)
 	} else {
-		return mgo.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": *filter.Category}).Page(&filter.PagerFilter)
+		return cms.CmsPostRepo.Find(context.Background(), bson.M{"categoryIds": *filter.Category}).Page(&filter.PagerFilter)
 	}
 }
 
@@ -80,13 +79,13 @@ func dataPost(p graphql.ResolveParams) (interface{}, error) {
 	id := p.Args["id"].(string)
 	fmt.Printf("dataPost Post id, %+v", id)
 
-	return mgo.CmsPostRepo.Get(id)
+	return cms.CmsPostRepo.Get(id)
 }
 
 func delDataPost(p graphql.ResolveParams) (interface{}, error) {
 	gql.GqlMustLogin(p)
 	id := p.Args["id"].(string)
-	return mgo.CmsPostRepo.Del(id)
+	return cms.CmsPostRepo.Del(id)
 }
 
 var GfCmsPostType = gql.NewObjBuilder("GftCmsPost").

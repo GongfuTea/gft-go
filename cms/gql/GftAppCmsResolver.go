@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/GongfuTea/gft-go/cms/mgo"
+	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/core/gql"
 	"github.com/graphql-go/graphql"
 	"go.mongodb.org/mongo-driver/bson"
@@ -31,12 +31,12 @@ var AppCmsResolver = &GftAppCmsResolver{
 }
 
 func appPosts(p graphql.ResolveParams) (any, error) {
-	return mgo.CmsPostRepo.Find(context.Background(), bson.M{"state": "Published"}).All()
+	return cms.CmsPostRepo.Find(context.Background(), bson.M{"state": "Published"}).All()
 }
 
 func appPost(p graphql.ResolveParams) (any, error) {
 	id := p.Args["id"].(string)
 	fmt.Printf("dataPost Post id, %+v", id)
 
-	return mgo.CmsPostRepo.Get(id)
+	return cms.CmsPostRepo.Get(id)
 }
