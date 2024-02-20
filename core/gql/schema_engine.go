@@ -163,13 +163,20 @@ func (s *SchemaEngine) mapOutputType(t reflect.Type) graphql.Output {
 	case reflect.Slice:
 		return graphql.NewList(s.mapOutputType(t.Elem()))
 
+	// case reflect.Map:
+	// 	return graphql.NewList(s.mapOutputType(t.Elem()))
+
 	default:
-		fmt.Printf("[mapOutputType] Unsupported type for object %s\n", t.Name())
+		fmt.Printf("[mapOutputType] Unsupported type for object %s, %s\n", t.Kind(), t.Name())
 		return nil
 	}
 }
 
 func (s *SchemaEngine) mapInputType(t reflect.Type) graphql.Input {
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
 	switch t.Kind() {
 	case reflect.String, reflect.Int, reflect.Float32, reflect.Float64, reflect.Bool, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		return s.mapGraphqlType(t)
@@ -181,7 +188,7 @@ func (s *SchemaEngine) mapInputType(t reflect.Type) graphql.Input {
 		return graphql.NewList(s.mapInputType(t.Elem()))
 
 	default:
-		fmt.Printf("[mapInputType] Unsupported type for object %s\n", t.Name())
+		fmt.Printf("[mapInputType] Unsupported type for object %s, %s\n", t.Kind(), t.Name())
 		return nil
 	}
 }

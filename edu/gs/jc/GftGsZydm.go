@@ -5,7 +5,7 @@ import (
 )
 
 type GftGsZydm struct {
-	db.DbEntity `bson:",inline"`
+	db.DbEntity `bson:",inline" json:",inline"`
 	Code        string `bson:"code" json:"code"`
 	Name        string `bson:"name" json:"name"`
 	Level       int    `bson:"level" json:"level"`
@@ -14,7 +14,7 @@ type GftGsZydm struct {
 	Xkmlm       string `bson:"xkmlm" json:"xkmlm"` // 学科门类
 	Zscc        string `bson:"zscc" json:"zscc"`   // 招生层次 s/b/a
 
-	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
+	// Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
 
 func NewGsZydm(code string, name string, level int, xwlx string, zscc string) *GftGsZydm {

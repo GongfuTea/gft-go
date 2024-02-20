@@ -14,5 +14,5 @@ type GftDictItem struct {
 	Level       int     `bson:"level" json:"level"`
 	Note        string  `bson:"note" json:"note"`
 
-	Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
+	// Locale map[string]string `bson:"locale,omitempty" json:"locale,omitempty"`
 }
