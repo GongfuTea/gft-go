@@ -4,10 +4,53 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/graphql/language/ast"
 )
+
+var AnyValueType = graphql.NewScalar(graphql.ScalarConfig{
+	Name: "AnyValue",
+	// Serialize will be used to convert the Golang value into the value sent to the client
+	Serialize: func(value interface{}) interface{} {
+		return value
+	},
+	// ParseValue will be used to convert the value received from the client into the Golang value
+	ParseValue: func(value interface{}) interface{} {
+		return value
+	},
+	// ParseLiteral will be used to convert the AST literal received from the client into the Golang value
+	ParseLiteral: func(valueAST ast.Value) interface{} {
+		switch valueAST := valueAST.(type) {
+		case *ast.StringValue:
+			return valueAST.Value
+		case *ast.IntValue:
+			intVal, _ := strconv.ParseInt(valueAST.Value, 10, 64)
+			return intVal
+		case *ast.FloatValue:
+			floatVal, _ := strconv.ParseFloat(valueAST.Value, 64)
+			return floatVal
+		case *ast.BooleanValue:
+			return valueAST.Value
+		default:
+			return nil
+		}
+	},
+})
+
+var MapType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "MapType",
+	Fields: graphql.Fields{
+		"key": &graphql.Field{
+			Type: graphql.String,
+		},
+		"value": &graphql.Field{
+			Type: AnyValueType,
+		},
+	},
+})
 
 var DefaultSchemaEngine *SchemaEngine = &SchemaEngine{
 	outputMap: make(map[reflect.Type]*graphql.Object),
@@ -163,8 +206,8 @@ func (s *SchemaEngine) mapOutputType(t reflect.Type) graphql.Output {
 	case reflect.Slice:
 		return graphql.NewList(s.mapOutputType(t.Elem()))
 
-	// case reflect.Map:
-	// 	return graphql.NewList(s.mapOutputType(t.Elem()))
+	case reflect.Map:
+		return MapType
 
 	default:
 		fmt.Printf("[mapOutputType] Unsupported type for object %s, %s\n", t.Kind(), t.Name())
