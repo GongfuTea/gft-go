@@ -1,12 +1,15 @@
 package cms_handlers
 
 import (
+	"context"
 	"time"
 
 	"github.com/GongfuTea/gft-go/cms"
 	"github.com/GongfuTea/gft-go/cms/commands"
 	"github.com/GongfuTea/gft-go/cms/queries"
+	"github.com/GongfuTea/gft-go/core/mgo"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type CmsPostResolver struct {
@@ -35,8 +38,19 @@ func (r *CmsPostResolver) SaveCmsPost(cmd commands.SaveCmsPost) (string, error) 
 	return Post.Id, err
 }
 
-func (r *CmsPostResolver) CmsPosts(cmd queries.CmsPosts) ([]*cms.GftCmsPost, error) {
-	return cms.CmsPostRepo.All()
+func (r *CmsPostResolver) CmsPosts(q queries.CmsPosts) (mgo.QueryPageResult[*cms.GftCmsPost], error) {
+	m := bson.M{}
+	if q.Filter.Category != nil {
+		if *q.Filter.Category == "" {
+			m["categoryIds"] = []string{}
+		} else {
+			m["categoryIds"] = *q.Filter.Category
+		}
+	}
+	res, err := cms.CmsPostRepo.Find(context.Background(), m).Page(&q.Filter.PagerFilter)
+
+	return res, err
+
 }
 
 func (r *CmsPostResolver) CmsPost(q queries.CmsPost) (*cms.GftCmsPost, error) {

@@ -1,6 +1,6 @@
 package db
 
 type PagerFilter struct {
-	Page int64
-	Size int64
+	Page int64 `json:"page"`
+	Size int64 `json:"size"`
 }

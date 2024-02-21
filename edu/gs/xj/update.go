@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	bmgo "github.com/GongfuTea/gft-go/base/mgo"
+	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/types"
 	"github.com/GongfuTea/gft-go/x/jsonx"
 	"github.com/GongfuTea/gft-go/x/timex"
@@ -36,7 +36,7 @@ func Set转专业(xh string, diff map[string]types.GftTimelineDiff, rq time.Time
 }
 
 func Set退学(xh string, txrq time.Time, note string) {
-	dqzt, _ := bmgo.DictItemRepo.FindByItemName("JY.XSDQZT", "退学")
+	dqzt, _ := base.DictItemRepo.FindByItemName("JY.XSDQZT", "退学")
 
 	if dqzt == nil {
 		panic("获取学生当前状态字典错误")

@@ -175,12 +175,22 @@ func (s *SchemaEngine) genOutputFields(t reflect.Type) graphql.Fields {
 }
 
 func (s *SchemaEngine) genOutputObject(t reflect.Type) *graphql.Object {
+	name := t.Name()
+	isGeneric := strings.Contains(name, "[") && strings.HasSuffix(name, "]")
+	if isGeneric {
+		baseName := strings.Split(name, "[")[0]
+		genericNames := strings.Split(strings.Split(strings.Split(name, "[")[1], "]")[0], ".")
+		genericName := genericNames[len(genericNames)-1]
+		name = baseName + genericName
+		println("[genOutputObject] isGeneric", baseName, genericName, name)
+	}
+
 	if obj, ok := s.outputMap[t]; ok {
 		return obj
 	}
 
 	s.outputMap[t] = graphql.NewObject(graphql.ObjectConfig{
-		Name:   t.Name(),
+		Name:   name,
 		Fields: s.genOutputFields(t),
 	})
 
@@ -200,6 +210,7 @@ func (s *SchemaEngine) mapOutputType(t reflect.Type) graphql.Output {
 		if t.Name() == "Time" {
 			return graphql.String
 		} else {
+			println("[mapOutputType]", t.Kind(), t.Name())
 			return s.genOutputObject(t)
 		}
 

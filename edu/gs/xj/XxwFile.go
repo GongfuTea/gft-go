@@ -4,9 +4,7 @@ import (
 	"time"
 
 	"github.com/GongfuTea/gft-go/base"
-	bmgo "github.com/GongfuTea/gft-go/base/mgo"
 	"github.com/GongfuTea/gft-go/edu/gs/jc"
-	"github.com/GongfuTea/gft-go/edu/gs/jc/mgo"
 	"github.com/GongfuTea/gft-go/x/timex"
 	"github.com/GongfuTea/gft-go/x/xlsx"
 )
@@ -27,13 +25,13 @@ type XxwFile struct {
 
 func NewXxwFile() *XxwFile {
 	xxw := &XxwFile{}
-	xxw.YxsList, _ = mgo.GsYxsRepo.All()
-	xxw.MzList, _ = bmgo.DictItemRepo.FindByCategoryId("GB.MZ")
-	xxw.ZzmmList, _ = bmgo.DictItemRepo.FindByCategoryId("GB.ZZMM")
-	xxw.ZjlxList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.SFZJLX")
-	xxw.XxxsList, _ = bmgo.DictItemRepo.FindByCategoryId("XX.XXXS")
-	xxw.PyfsList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.PYFS")
-	xxw.XsdqztList, _ = bmgo.DictItemRepo.FindByCategoryId("JY.XSDQZT")
+	xxw.YxsList, _ = jc.GsYxsRepo.All()
+	xxw.MzList, _ = base.DictItemRepo.FindByCategoryId("GB.MZ")
+	xxw.ZzmmList, _ = base.DictItemRepo.FindByCategoryId("GB.ZZMM")
+	xxw.ZjlxList, _ = base.DictItemRepo.FindByCategoryId("JY.SFZJLX")
+	xxw.XxxsList, _ = base.DictItemRepo.FindByCategoryId("XX.XXXS")
+	xxw.PyfsList, _ = base.DictItemRepo.FindByCategoryId("JY.PYFS")
+	xxw.XsdqztList, _ = base.DictItemRepo.FindByCategoryId("JY.XSDQZT")
 	return xxw
 }
 
