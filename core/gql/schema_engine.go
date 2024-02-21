@@ -210,7 +210,7 @@ func (s *SchemaEngine) mapOutputType(t reflect.Type) graphql.Output {
 		if t.Name() == "Time" {
 			return graphql.String
 		} else {
-			println("[mapOutputType]", t.Kind(), t.Name())
+			// println("[mapOutputType]", t.Kind(), t.Name())
 			return s.genOutputObject(t)
 		}
 
