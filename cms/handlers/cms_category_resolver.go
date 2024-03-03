@@ -35,7 +35,7 @@ func (r *CmsCategoryResolver) CmsCategories(cmd queries.CmsCategories) ([]*cms.G
 	return cms.CmsCategoryRepo.All()
 }
 
-func (r *CmsNavResolver) CmsCategory(q queries.CmsCategory) (*cms.GftCmsCategory, error) {
+func (r *CmsCategoryResolver) CmsCategory(q queries.CmsCategory) (*cms.GftCmsCategory, error) {
 	return cms.CmsCategoryRepo.Get(q.Id)
 }
 
