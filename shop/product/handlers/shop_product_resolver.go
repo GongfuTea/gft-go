@@ -33,12 +33,8 @@ func (r *ShopProductResolver) SaveShopProduct(cmd commands.SaveShopProduct) (str
 
 func (r *ShopProductResolver) ShopProducts(q queries.ShopProducts) (mgo.QueryPageResult[*product.GftShopProduct], error) {
 	m := bson.M{}
-	if q.Filter.Category != nil {
-		if *q.Filter.Category == "" {
-			m["categoryIds"] = []string{}
-		} else {
-			m["categoryIds"] = *q.Filter.Category
-		}
+	if q.Filter.Category != "" {
+		m["categoryIds"] = q.Filter.Category
 	}
 	res, err := product.ShopProductRepo.Find(context.Background(), m).Page(&q.Filter.PagerFilter)
 
