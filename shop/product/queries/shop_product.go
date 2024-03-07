@@ -12,5 +12,5 @@ type ShopProduct struct {
 
 type ShopProductFilter struct {
 	db.PagerFilter `json:",inline"`
-	Category       *string `json:"category,omitempty"`
+	Category       string `json:"category,omitempty"`
 }

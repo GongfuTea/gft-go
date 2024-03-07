@@ -12,5 +12,5 @@ type CmsPost struct {
 
 type CmsPostFilter struct {
 	db.PagerFilter `json:",inline"`
-	Category       *string `json:"category,omitempty"`
+	Category       string `json:"category,omitempty"`
 }

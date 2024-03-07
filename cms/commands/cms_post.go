@@ -17,9 +17,9 @@ type DelCmsPost struct {
 
 type SaveCmsPostInput struct {
 	Title        string          `bson:"title" json:"title"`
-	SubTitle     *string         `bson:"subTitle,omitempty" json:"subTitle,omitempty"`
-	Abstract     *string         `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	Slug         *string         `bson:"slug,omitempty" json:"slug,omitempty"`
+	SubTitle     string         `bson:"subTitle,omitempty" json:"subTitle,omitempty"`
+	Abstract     string         `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Slug         string         `bson:"slug,omitempty" json:"slug,omitempty"`
 	SortOrder    float32         `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
 	Content      string          `bson:"content" json:"content"`
 	State        cms.PostState   `bson:"state" json:"state"`

@@ -45,11 +45,11 @@ func (r *CmsPostResolver) SaveCmsPost(cmd commands.SaveCmsPost) (string, error) 
 
 func (r *CmsPostResolver) CmsPosts(q queries.CmsPosts) (mgo.QueryPageResult[*cms.GftCmsPost], error) {
 	m := bson.M{}
-	if q.Filter.Category != nil {
-		if *q.Filter.Category == "" {
+	if q.Filter.Category != "All" {
+		if q.Filter.Category == "" {
 			m["categoryIds"] = []string{}
 		} else {
-			m["categoryIds"] = *q.Filter.Category
+			m["categoryIds"] = q.Filter.Category
 		}
 	}
 	res, err := cms.CmsPostRepo.Find(context.Background(), m).Page(&q.Filter.PagerFilter)
