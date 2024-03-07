@@ -10,11 +10,11 @@ type DelDictItem struct {
 }
 
 type SaveDictItemInput struct {
-	CategoryId string  `json:"categoryId"`
-	Code       string  `json:"code"`
-	Name       string  `json:"name"`
-	Nickname   string  `json:"nickname"`
-	SortOrder  float32 `json:"sortOrder"`
-	Level      int     `json:"level"`
-	Note       string  `json:"note"`
+	CategoryId string  `bson:"categoryId" json:"categoryId"`
+	Code       string  `bson:"code" json:"code"`
+	Name       string  `bson:"name" json:"name"`
+	Nickname   string  `bson:"nickname" json:"nickname"`
+	SortOrder  float32 `bson:"sortOrder" json:"sortOrder"`
+	Level      int     `bson:"level" json:"level"`
+	Note       string  `bson:"note" json:"note"`
 }

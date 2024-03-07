@@ -10,10 +10,10 @@ type DelGsYxs struct {
 }
 
 type SaveGsYxsInput struct {
-	Name      string  `json:"name,omitempty"`
-	Code      string  `json:"code,omitempty"`
-	Pid       string  `json:"pid,omitempty"`
-	Nickname  string  `json:"nickname,omitempty"`
-	SortOrder float32 `json:"sortOrder,omitempty"`
-	Note      string  `json:"note"`
+	Name      string  `bson:"name,omitempty" json:"name,omitempty"`
+	Code      string  `bson:"code,omitempty" json:"code,omitempty"`
+	Pid       string  `bson:"pid,omitempty" json:"pid,omitempty"`
+	Nickname  string  `bson:"nickname,omitempty" json:"nickname,omitempty"`
+	SortOrder float32 `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
+	Note      string  `bson:"note" json:"note"`
 }

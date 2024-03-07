@@ -10,12 +10,12 @@ type DelGsZydm struct {
 }
 
 type SaveGsZydmInput struct {
-	Code      string  `json:"code"`
-	Name      string  `json:"name"`
-	Level     int     `json:"level"`
-	Note      string  `json:"note"`
-	Xwlxm     string  `json:"xwlxm"` // 学位类型 xs/zx
-	Xkmlm     string  `json:"xkmlm"` // 学科门类
-	Zscc      string  `json:"zscc"`  // 招生层次 s/b/a
-	SortOrder float32 `json:"sortOrder,omitempty"`
+	Code      string  `bson:"code" json:"code"`
+	Name      string  `bson:"name" json:"name"`
+	Level     int     `bson:"level" json:"level"`
+	Note      string  `bson:"note" json:"note"`
+	Xwlxm     string  `bson:"xwlxm" json:"xwlxm"` // 学位类型 xs/zx
+	Xkmlm     string  `bson:"xkmlm" json:"xkmlm"` // 学科门类
+	Zscc      string  `bson:"zscc" json:"zscc"`   // 招生层次 s/b/a
+	SortOrder float32 `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
 }

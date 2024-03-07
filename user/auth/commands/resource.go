@@ -12,10 +12,10 @@ type DelAuthResource struct {
 }
 
 type SaveAuthResourceInput struct {
-	Pid        string                  `json:"pid,omitempty"`
-	Code       string                  `json:"code,omitempty"`
-	Name       string                  `json:"name,omitempty"`
-	Category   string                  `json:"category,omitempty"`
-	Operations []auth.GftAuthOperation `json:"operations"`
-	SortOrder  float32                 `json:"sortOrder"`
+	Pid        string                  `bson:"pid,omitempty" json:"pid,omitempty"`
+	Code       string                  `bson:"code,omitempty" json:"code,omitempty"`
+	Name       string                  `bson:"name,omitempty" json:"name,omitempty"`
+	Category   string                  `bson:"category,omitempty" json:"category,omitempty"`
+	Operations []auth.GftAuthOperation `bson:"operations" json:"operations"`
+	SortOrder  float32                 `bson:"sortOrder" json:"sortOrder"`
 }

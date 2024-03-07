@@ -16,20 +16,20 @@ type DelCmsPost struct {
 }
 
 type SaveCmsPostInput struct {
-	Title        string          `json:"title"`
-	SubTitle     *string         `json:"subTitle,omitempty"`
-	Abstract     *string         `json:"abstract,omitempty"`
-	Slug         *string         `json:"slug,omitempty"`
-	SortOrder    float32         `json:"sortOrder,omitempty"`
-	Content      string          `json:"content"`
-	State        cms.PostState   `json:"state"`
-	Type         cms.PostType    `json:"type"`
-	Format       cms.PostFormat  `json:"format"`
-	Note         string          `json:"note"`
-	Tags         []string        `json:"tags"`
-	CategoryIds  []string        `json:"categoryIds"`
-	PublishDate  time.Time       `json:"publishDate,omitempty"`
-	PublishDepts []string        `json:"publishDepts"`
-	AccessLevel  cms.AccessLevel `json:"accessLevel"`
-	NewWindow    bool            `json:"newWindow"`
+	Title        string          `bson:"title" json:"title"`
+	SubTitle     *string         `bson:"subTitle,omitempty" json:"subTitle,omitempty"`
+	Abstract     *string         `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Slug         *string         `bson:"slug,omitempty" json:"slug,omitempty"`
+	SortOrder    float32         `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
+	Content      string          `bson:"content" json:"content"`
+	State        cms.PostState   `bson:"state" json:"state"`
+	Type         cms.PostType    `bson:"type" json:"type"`
+	Format       cms.PostFormat  `bson:"format" json:"format"`
+	Note         string          `bson:"note,omitempty" json:"note,omitempty"`
+	Tags         []string        `bson:"tags" json:"tags"`
+	CategoryIds  []string        `bson:"categoryIds" json:"categoryIds"`
+	PublishDate  time.Time       `bson:"publishDate,omitempty" json:"publishDate,omitempty"`
+	PublishDepts []string        `bson:"publishDepts" json:"publishDepts"`
+	AccessLevel  cms.AccessLevel `bson:"accessLevel" json:"accessLevel"`
+	NewWindow    bool            `bson:"newWindow" json:"newWindow"`
 }

@@ -10,9 +10,9 @@ type DelDictCategory struct {
 }
 
 type SaveDictCategoryInput struct {
-	Pid       string  `json:"pid,omitempty"`
-	Name      string  `json:"name"`
-	Code      string  `json:"code,omitempty"`
-	SortOrder float32 `json:"sortOrder"`
-	Note      string  `json:"note"`
+	Pid       string  `bson:"pid,omitempty" json:"pid,omitempty"`
+	Name      string  `bson:"name" json:"name"`
+	Code      string  `bson:"code,omitempty" json:"code,omitempty"`
+	SortOrder float32 `bson:"sortOrder" json:"sortOrder"`
+	Note      string  `bson:"note" json:"note"`
 }

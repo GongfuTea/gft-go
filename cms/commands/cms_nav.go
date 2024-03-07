@@ -12,15 +12,15 @@ type DelCmsNav struct {
 }
 
 type SaveCmsNavInput struct {
-	Pid         string          `json:"pid,omitempty"`
-	Code        string          `json:"code,omitempty"`
-	Name        string          `json:"name,omitempty"`
-	SortOrder   float32         `json:"sortOrder,omitempty"`
-	Content     string          `json:"content"`
-	State       cms.PostState   `json:"state"`
-	Type        cms.MenuType    `json:"type"`
-	TargetIds   []string        `json:"targetIds"`
-	AccessLevel cms.AccessLevel `json:"accessLevel"`
-	Note        string          `json:"note"`
-	NewWindow   bool            `json:"newWindow"`
+	Pid         string          `bson:"pid,omitempty" json:"pid,omitempty"`
+	Code        string          `bson:"code,omitempty" json:"code,omitempty"`
+	Name        string          `bson:"name,omitempty" json:"name,omitempty"`
+	SortOrder   float32         `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
+	Content     string          `bson:"content" json:"content"`
+	State       cms.PostState   `bson:"state" json:"state"`
+	Type        cms.MenuType    `bson:"type" json:"type"`
+	TargetIds   []string        `bson:"targetIds" json:"targetIds"`
+	AccessLevel cms.AccessLevel `bson:"accessLevel" json:"accessLevel"`
+	Note        string          `bson:"note" json:"note"`
+	NewWindow   bool            `bson:"newWindow" json:"newWindow"`
 }

@@ -10,10 +10,10 @@ type DelCmsImage struct {
 }
 
 type SaveCmsImageInput struct {
-	Name string   `json:"name"`
-	Type string   `json:"type"`
-	Size int      `json:"size"`
-	Url  string   `json:"url"`
-	Note string   `json:"note"`
-	Tags []string `json:"tags"`
+	Name string   `bson:"name" json:"name"`
+	Type string   `bson:"type" json:"type"`
+	Size int      `bson:"size" json:"size"`
+	Url  string   `bson:"url" json:"url"`
+	Note string   `bson:"note" json:"note"`
+	Tags []string `bson:"tags" json:"tags"`
 }

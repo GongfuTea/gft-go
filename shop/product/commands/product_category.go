@@ -10,9 +10,9 @@ type DelProductCategory struct {
 }
 
 type SaveProductCategoryInput struct {
-	Pid       string  `json:"pid,omitempty"`
-	Name      string  `json:"name"`
-	Code      string  `json:"code,omitempty"`
-	SortOrder float32 `json:"sortOrder"`
-	Note      string  `json:"note"`
+	Pid       string  `json:"pid,omitempty" bson:"pid,omitempty"`
+	Name      string  `json:"name" bson:"name"`
+	Code      string  `json:"code,omitempty" bson:"code,omitempty"`
+	SortOrder float32 `json:"sortOrder" bson:"sortOrder"`
+	Note      string  `json:"note" bson:"note"`
 }

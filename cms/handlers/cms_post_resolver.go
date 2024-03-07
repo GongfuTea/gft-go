@@ -2,6 +2,7 @@ package cms_handlers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/GongfuTea/gft-go/cms"
@@ -18,6 +19,9 @@ type CmsPostResolver struct {
 func (r *CmsPostResolver) SaveCmsPost(cmd commands.SaveCmsPost) (string, error) {
 	if cmd.Id != "" {
 		_, err := cms.CmsPostRepo.UpdateById(cmd.Id, cmd.Input)
+		if err != nil {
+			fmt.Println("err", err)
+		}
 		return cmd.Id, err
 	}
 
@@ -27,6 +31,7 @@ func (r *CmsPostResolver) SaveCmsPost(cmd commands.SaveCmsPost) (string, error) 
 		Abstract:    cmd.Input.Abstract,
 		Slug:        cmd.Input.Slug,
 		Note:        cmd.Input.Note,
+		PublishDate: cmd.Input.PublishDate,
 		SortOrder:   cmd.Input.SortOrder,
 		Content:     cmd.Input.Content,
 		NewWindow:   cmd.Input.NewWindow,

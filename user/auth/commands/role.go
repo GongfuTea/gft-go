@@ -12,7 +12,7 @@ type DelAuthRole struct {
 }
 
 type SaveAuthRoleInput struct {
-	Name        string                   `json:"name"`
-	Permissions []auth.GftAuthPermission `json:"permissions"`
-	SortOrder   float32                  `json:"sortOrder"`
+	Name        string                   `json:"name" bson:"name"`
+	Permissions []auth.GftAuthPermission `json:"permissions" bson:"permissions"`
+	SortOrder   float32                  `json:"sortOrder" bson:"sortOrder"`
 }
