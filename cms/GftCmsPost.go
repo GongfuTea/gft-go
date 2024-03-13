@@ -9,12 +9,12 @@ import (
 type GftCmsPost struct {
 	db.DbEntity  `bson:",inline" json:",inline"`
 	Title        string      `bson:"title" json:"title"`
-	SubTitle     string     `bson:"subTitle" json:"subTitle,omitempty"`
-	Abstract     string     `bson:"abstract" json:"abstract,omitempty"`
-	Slug         string     `bson:"slug" json:"slug,omitempty"`
+	SubTitle     string      `bson:"subTitle" json:"subTitle,omitempty"`
+	Abstract     string      `bson:"abstract" json:"abstract,omitempty"`
+	Slug         string      `bson:"slug" json:"slug,omitempty"`
 	SortOrder    float32     `bson:"sortOrder" json:"sortOrder,omitempty"`
 	Content      string      `bson:"content" json:"content"`
-	State        PostState   `bson:"state" json:"state"`
+	State        ActiveState `bson:"state" json:"state"`
 	Type         PostType    `bson:"type" json:"type"`
 	Format       PostFormat  `bson:"format" json:"format"`
 	Note         string      `bson:"note" json:"note"`

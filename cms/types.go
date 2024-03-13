@@ -1,14 +1,14 @@
 package cms
 
-type PostState string
+type ActiveState string
 
 const (
-	PostState_Draft     PostState = "Draft"
-	PostState_Published PostState = "Published"
-	PostState_Archived  PostState = "Archived"
+	ActiveState_Draft     ActiveState = "Draft"
+	ActiveState_Published ActiveState = "Published"
+	ActiveState_Archived  ActiveState = "Archived"
 )
 
-var PostStates []PostState = []PostState{PostState_Draft, PostState_Published, PostState_Archived}
+var ActiveStates []ActiveState = []ActiveState{ActiveState_Draft, ActiveState_Published, ActiveState_Archived}
 
 type PostType string
 

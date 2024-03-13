@@ -17,7 +17,7 @@ type SaveCmsNavInput struct {
 	Name        string          `bson:"name,omitempty" json:"name,omitempty"`
 	SortOrder   float32         `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
 	Content     string          `bson:"content" json:"content"`
-	State       cms.PostState   `bson:"state" json:"state"`
+	State       cms.ActiveState `bson:"state" json:"state"`
 	Type        cms.MenuType    `bson:"type" json:"type"`
 	TargetIds   []string        `bson:"targetIds" json:"targetIds"`
 	AccessLevel cms.AccessLevel `bson:"accessLevel" json:"accessLevel"`

@@ -6,11 +6,11 @@ import (
 
 type GftCmsNav struct {
 	db.DbTreeEntity `bson:",inline" json:",inline"`
-	Name            string    `bson:"name" json:"name,omitempty"`
-	SortOrder       float32   `bson:"sortOrder" json:"sortOrder,omitempty"`
-	Content         string    `bson:"content" json:"content"`
-	State           PostState `bson:"state" json:"state"`
-	Type            MenuType  `bson:"type" json:"type"`
+	Name            string      `bson:"name" json:"name,omitempty"`
+	SortOrder       float32     `bson:"sortOrder" json:"sortOrder,omitempty"`
+	Content         string      `bson:"content" json:"content"`
+	State           ActiveState `bson:"state" json:"state"`
+	Type            MenuType    `bson:"type" json:"type"`
 	// TypeId          string      `bson:"typeId,omitempty" json:"typeId,omitempty"`
 	TargetIds   []string    `bson:"targetIds" json:"targetIds"`
 	AccessLevel AccessLevel `bson:"accessLevel" json:"accessLevel"`

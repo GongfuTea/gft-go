@@ -37,6 +37,7 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 	return repo.Find(context.Background(), bson.M{}).All()
 }
 
+/** deprecated */
 func (repo MgoRepo[T]) Save(model T) (T, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	var err error
@@ -50,6 +51,12 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 		_, err = repo.Coll().InsertOne(ctx, model)
 	}
 
+	return model, err
+}
+
+func (repo MgoRepo[T]) Insert(model T) (T, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	_, err := repo.Coll().InsertOne(ctx, model)
 	return model, err
 }
 
