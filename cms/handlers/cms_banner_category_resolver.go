@@ -7,31 +7,27 @@ import (
 )
 
 type CmsBannerCategoryResolver struct {
+	cmsService *cms.CmsService
 }
 
 func NewBannerCategoryResolver() *CmsBannerCategoryResolver {
-	return &CmsBannerCategoryResolver{}
+	return &CmsBannerCategoryResolver{
+		cmsService: cms.NewCmsService(),
+	}
 }
 
 func (r *CmsBannerCategoryResolver) SaveCmsBannerCategory(cmd commands.SaveCmsBannerCategory) (string, error) {
-	if cmd.Id != "" {
-		_, err := cms.CmsBannerCategoryRepo.UpdateById(cmd.Id, cmd.Input)
-		return cmd.Id, err
-	}
-
-	category := cms.NewBannerCategory(cmd.Input)
-	_, err := cms.CmsBannerCategoryRepo.Save(category)
-	return category.Id, err
+	return r.cmsService.SaveBannerCategory(cmd.Id, cmd.Input)
 }
 
 func (r *CmsBannerCategoryResolver) CmsBannerCategories(cmd queries.CmsBannerCategories) ([]*cms.GftCmsBannerCategory, error) {
-	return cms.CmsBannerCategoryRepo.All()
+	return r.cmsService.BannerCategoryRepo.All()
 }
 
 func (r *CmsBannerCategoryResolver) CmsBannerCategory(q queries.CmsBannerCategory) (*cms.GftCmsBannerCategory, error) {
-	return cms.CmsBannerCategoryRepo.Get(q.Id)
+	return r.cmsService.BannerCategoryRepo.Get(q.Id)
 }
 
 func (r *CmsBannerCategoryResolver) DelCmsBannerCategory(cmd commands.DelCmsBannerCategory) (bool, error) {
-	return cms.CmsBannerCategoryRepo.Del(cmd.Id)
+	return r.cmsService.BannerCategoryRepo.Del(cmd.Id)
 }

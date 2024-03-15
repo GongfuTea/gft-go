@@ -1,8 +1,6 @@
 package base
 
 import (
-	"context"
-
 	"github.com/GongfuTea/gft-go/core/mgo"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -16,13 +14,13 @@ var DictItemRepo = &GftDictItemRepo{
 }
 
 func (r *GftDictItemRepo) FindByCategoryId(categoryId string) ([]*GftDictItem, error) {
-	return r.Find(context.Background(), bson.M{"categoryId": categoryId}).All()
+	return r.Find(bson.M{"categoryId": categoryId}).All()
 }
 
 func (r *GftDictItemRepo) FindByItemCode(categoryId string, itemCode string) (*GftDictItem, error) {
-	return r.Find(context.Background(), bson.M{"categoryId": categoryId, "code": itemCode}).One()
+	return r.Find(bson.M{"categoryId": categoryId, "code": itemCode}).One()
 }
 
 func (r *GftDictItemRepo) FindByItemName(categoryId string, itemValue string) (*GftDictItem, error) {
-	return r.Find(context.Background(), bson.M{"categoryId": categoryId, "name": itemValue}).One()
+	return r.Find(bson.M{"categoryId": categoryId, "name": itemValue}).One()
 }

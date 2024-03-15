@@ -2,6 +2,7 @@ package mgo
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/GongfuTea/gft-go/types"
@@ -22,10 +23,14 @@ func (repo MgoRepo[T]) Coll() *mongo.Collection {
 }
 
 func (repo MgoRepo[T]) Get(id string) (T, error) {
-	return repo.Find(context.Background(), bson.M{"_id": id}).One()
+	if id == "" {
+		return *new(T), fmt.Errorf("id is empty")
+	}
+	return repo.Find(bson.M{"_id": id}).One()
 }
 
-func (repo MgoRepo[T]) Find(ctx context.Context, filter any) IQuery[T] {
+func (repo MgoRepo[T]) Find(filter any) IQuery[T] {
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	return &Query[T]{
 		ctx:    ctx,
 		filter: filter,
@@ -34,7 +39,7 @@ func (repo MgoRepo[T]) Find(ctx context.Context, filter any) IQuery[T] {
 }
 
 func (repo MgoRepo[T]) All() ([]T, error) {
-	return repo.Find(context.Background(), bson.M{}).All()
+	return repo.Find(bson.M{}).All()
 }
 
 /** deprecated */
@@ -90,5 +95,5 @@ func (repo MgoRepo[T]) IsExist(id string) (bool, error) {
 	if id == "" {
 		return false, nil
 	}
-	return repo.Find(context.Background(), bson.M{"_id": id}).Exist()
+	return repo.Find(bson.M{"_id": id}).Exist()
 }

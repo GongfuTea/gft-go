@@ -1,7 +1,6 @@
 package cms_handlers
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -52,7 +51,7 @@ func (r *CmsPostResolver) CmsPosts(q queries.CmsPosts) (mgo.QueryPageResult[*cms
 			m["categoryIds"] = q.Filter.Category
 		}
 	}
-	res, err := cms.CmsPostRepo.Find(context.Background(), m).Page(&q.Filter.PagerFilter)
+	res, err := cms.CmsPostRepo.Find(m).Page(&q.Filter.PagerFilter)
 
 	return res, err
 

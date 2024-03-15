@@ -1,7 +1,6 @@
 package cms_handlers
 
 import (
-	"context"
 	"time"
 
 	"github.com/GongfuTea/gft-go/core/mgo"
@@ -36,7 +35,7 @@ func (r *ShopProductResolver) ShopProducts(q queries.ShopProducts) (mgo.QueryPag
 	if q.Filter.Category != "" {
 		m["categoryIds"] = q.Filter.Category
 	}
-	res, err := product.ShopProductRepo.Find(context.Background(), m).Page(&q.Filter.PagerFilter)
+	res, err := product.ShopProductRepo.Find(m).Page(&q.Filter.PagerFilter)
 
 	return res, err
 

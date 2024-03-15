@@ -8,6 +8,8 @@ type GftCmsBannerCategoryRepo struct {
 	*mgo.MgoTreeRepo[*GftCmsBannerCategory]
 }
 
-var CmsBannerCategoryRepo = &GftCmsBannerCategoryRepo{
-	mgo.NewMgoTreeRepo[*GftCmsBannerCategory]("GftCmsBannerCategory"),
+func NewBannerCategoryRepo() *GftCmsBannerCategoryRepo {
+	return &GftCmsBannerCategoryRepo{
+		mgo.NewMgoTreeRepo[*GftCmsBannerCategory]("GftCmsBannerCategory"),
+	}
 }

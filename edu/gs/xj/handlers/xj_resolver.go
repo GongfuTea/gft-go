@@ -1,7 +1,6 @@
 package gs_xj_handlers
 
 import (
-	"context"
 	"time"
 
 	"github.com/GongfuTea/gft-go/core/mgo"
@@ -29,7 +28,7 @@ func (r *XjResolver) SaveGsXj(cmd commands.SaveGsXj) (string, error) {
 }
 
 func (r *XjResolver) GsXjs(q queries.GsXjs) (mgo.QueryPageResult[*xj.GftGsXj], error) {
-	return xj.GsXjRepo.Find(context.Background(), bson.M{}).Page(&q.Filter.PagerFilter)
+	return xj.GsXjRepo.Find(bson.M{}).Page(&q.Filter.PagerFilter)
 }
 
 func (r *XjResolver) DelGsXj(cmd commands.DelGsXj) (bool, error) {
