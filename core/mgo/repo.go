@@ -44,7 +44,9 @@ func (repo MgoRepo[T]) All() ([]T, error) {
 
 /** deprecated */
 func (repo MgoRepo[T]) Save(model T) (T, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	var err error
 
 	// jsonx.PrintAsJson("MgoRepo Save", model)
@@ -60,7 +62,8 @@ func (repo MgoRepo[T]) Save(model T) (T, error) {
 }
 
 func (repo MgoRepo[T]) Insert(model T) (T, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	_, err := repo.Coll().InsertOne(ctx, model)
 	return model, err
 }
@@ -74,7 +77,8 @@ func (repo MgoRepo[T]) UpdateById(id string, m any) (bool, error) {
 }
 
 func (repo MgoRepo[T]) Del(id string) (bool, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	q := bson.M{"_id": id}
 	_, err := repo.Coll().DeleteOne(ctx, q)
@@ -87,7 +91,8 @@ func (repo MgoRepo[T]) Del(id string) (bool, error) {
 }
 
 func (repo MgoRepo[T]) DelAll() (*mongo.DeleteResult, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 300*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
+	defer cancel()
 	return repo.Coll().DeleteMany(ctx, bson.D{})
 }
 
