@@ -9,5 +9,5 @@ func UseDefaultGqlResolvers() {
 	enagine.AddResolver(&CmsNavResolver{})
 	enagine.AddResolver(&CmsPostResolver{})
 	enagine.AddResolver(&CmsBannerResolver{})
-	enagine.AddResolver(&CmsBannerCategoryResolver{})
+	enagine.AddResolver(NewBannerCategoryResolver())
 }

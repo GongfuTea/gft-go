@@ -49,7 +49,7 @@ func (repo MgoTreeRepo[T]) Save2(model T, oldMpath string) (T, error) {
 
 	o, err := repo.MgoRepo.Save(model)
 
-	if err == nil && oldMpath != model.GetMpath() {
+	if err == nil && oldMpath != "" && oldMpath != model.GetMpath() {
 		nodes, err := repo.SubNodes(oldMpath)
 		if err == nil {
 			err = repo.UpdateSubNodesMpath(nodes, oldMpath, model.GetMpath())
@@ -71,6 +71,7 @@ func (repo MgoTreeRepo[T]) CountSubNodes(mpath string) (int64, error) {
 
 func (repo MgoTreeRepo[T]) HasSubNodes(mpath string) (bool, error) {
 	count, err := repo.CountSubNodes(mpath)
+	fmt.Printf("CountSubNodes:%v, %v, %v\n", mpath, count, err)
 	if err != nil {
 		return false, err
 	}
@@ -101,10 +102,12 @@ func (repo MgoTreeRepo[T]) UpdateSubNodesMpath(nodes []T, mpathOld string, mpath
 func (repo MgoTreeRepo[T]) Del(id string) (bool, error) {
 	model, err := repo.Get(id)
 	if err != nil {
+		fmt.Printf("Del error: %v\n", err)
 		return false, err
 	}
 
 	has, err := repo.HasSubNodes(model.GetMpath())
+	fmt.Printf("has sub nodes: %v, %v\n", has, err)
 	if has || err != nil {
 		return false, err
 	}
