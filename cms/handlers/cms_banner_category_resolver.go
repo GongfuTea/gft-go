@@ -9,6 +9,10 @@ import (
 type CmsBannerCategoryResolver struct {
 }
 
+func NewBannerCategoryResolver() *CmsBannerCategoryResolver {
+	return &CmsBannerCategoryResolver{}
+}
+
 func (r *CmsBannerCategoryResolver) SaveCmsBannerCategory(cmd commands.SaveCmsBannerCategory) (string, error) {
 	if cmd.Id != "" {
 		_, err := cms.CmsBannerCategoryRepo.UpdateById(cmd.Id, cmd.Input)

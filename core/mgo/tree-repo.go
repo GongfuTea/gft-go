@@ -34,3 +34,20 @@ func (repo MgoTreeRepo[T]) Save(model T) (T, error) {
 	return repo.MgoRepo.Save(model)
 
 }
+
+// func (repo MgoTreeRepo[T]) UpdateById( model T) (T, error) {
+// 	fmt.Printf("save MgoTreeRepo, %#v\n", model)
+
+// 	if model.HasPid() {
+// 		parent, err := repo.MgoRepo.Get(model.PID())
+// 		if err == nil {
+// 			model.SetMpath(parent.GetMpath() + model.GetCode() + ".")
+// 		}
+// 	} else {
+// 		fmt.Printf("save category, %#v\n", model)
+
+// 		model.SetMpath(model.GetCode() + ".")
+// 	}
+// 	return repo.MgoRepo.Save(model)
+
+// }
