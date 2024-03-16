@@ -21,30 +21,27 @@ func NewMgoTreeRepo[T types.ITreeEntity](name string) *MgoTreeRepo[T] {
 }
 
 func (repo MgoTreeRepo[T]) Save(model T) (T, error) {
-	fmt.Printf("save MgoTreeRepo, %#v\n", model)
 
 	if model.HasPid() {
 		parent, err := repo.MgoRepo.Get(model.PID())
 		if err == nil {
-			model.SetMpath(parent.GetMpath() + model.GetCode() + ".")
+			model.SetMpath(parent.GetMpath() + "." + model.GetCode())
 		}
 	} else {
-		model.SetMpath(model.GetCode() + ".")
+		model.SetMpath(model.GetCode())
 	}
 
 	return repo.MgoRepo.Save(model)
 }
 
 func (repo MgoTreeRepo[T]) Save2(model T, oldMpath string) (T, error) {
-	fmt.Printf("save MgoTreeRepo, %#v\n", model)
-
 	if model.HasPid() {
 		parent, err := repo.MgoRepo.Get(model.PID())
 		if err == nil {
-			model.SetMpath(parent.GetMpath() + model.GetCode() + ".")
+			model.SetMpath(parent.GetMpath() + "." + model.GetCode())
 		}
 	} else {
-		model.SetMpath(model.GetCode() + ".")
+		model.SetMpath(model.GetCode())
 	}
 
 	o, err := repo.MgoRepo.Save(model)
@@ -71,7 +68,6 @@ func (repo MgoTreeRepo[T]) CountSubNodes(mpath string) (int64, error) {
 
 func (repo MgoTreeRepo[T]) HasSubNodes(mpath string) (bool, error) {
 	count, err := repo.CountSubNodes(mpath)
-	fmt.Printf("CountSubNodes:%v, %v, %v\n", mpath, count, err)
 	if err != nil {
 		return false, err
 	}

@@ -13,8 +13,9 @@ func NewCmsService() *CmsService {
 func (s *CmsService) SaveBannerCategory(id string, input CmsBannerCategoryData) (string, error) {
 	old, err := s.BannerCategoryRepo.Get(id)
 	if err == nil {
+		oldMpath := old.GetMpath()
 		old.CmsBannerCategoryData = input
-		_, err = s.BannerCategoryRepo.Save2(old, old.GetMpath())
+		_, err = s.BannerCategoryRepo.Save2(old, oldMpath)
 		return old.Id, err
 	}
 

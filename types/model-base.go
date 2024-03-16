@@ -10,7 +10,7 @@ type ModelBase struct {
 }
 
 type TreeModelBase struct {
-	Pid   string `bson:"pid,omitempty" json:"pid,omitempty"`
+	Pid   string `bson:"pid" json:"pid,omitempty"`
 	Code  string `bson:"code" json:"code,omitempty"`
 	Mpath string `bson:"mpath" json:"mpath,omitempty"`
 }
