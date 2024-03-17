@@ -1,12 +1,9 @@
 package handlers
 
 import (
-	"time"
-
 	"github.com/GongfuTea/gft-go/user/auth"
 	"github.com/GongfuTea/gft-go/user/auth/commands"
 	"github.com/GongfuTea/gft-go/user/auth/queries"
-	"github.com/google/uuid"
 )
 
 type RoleResolver struct {
@@ -18,14 +15,8 @@ func (r *RoleResolver) SaveAuthRole(cmd commands.SaveAuthRole) (string, error) {
 		return cmd.Id, err
 	}
 
-	role := auth.GftAuthRole{
-		Name:        cmd.Input.Name,
-		Permissions: cmd.Input.Permissions,
-		SortOrder:   cmd.Input.SortOrder,
-	}
-	role.Id = uuid.NewString()
-	role.CreatedAt = time.Now()
-	_, err := auth.AuthRoleRepo.Save(&role)
+	role := auth.NewAuthRole(cmd.Input)
+	_, err := auth.AuthRoleRepo.Save(role)
 	return role.Id, err
 }
 

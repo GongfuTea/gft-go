@@ -26,18 +26,10 @@ func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (stri
 		return cmd.Id, err
 	}
 
-	res := auth.GftAuthResource{
-		Name:       cmd.Input.Name,
-		Category:   cmd.Input.Category,
-		Operations: cmd.Input.Operations,
-		SortOrder:  cmd.Input.SortOrder,
-	}
+	res := auth.NewAuthResource(cmd.Input)
 	res.Id = uuid.NewString()
-	res.Pid = cmd.Input.Pid
-	res.Code = cmd.Input.Code
 	res.CreatedAt = time.Now()
-
-	_, err := auth.AuthResourceRepo.Save(&res)
+	_, err := auth.AuthResourceRepo.Save(res)
 	return res.Id, err
 }
 
