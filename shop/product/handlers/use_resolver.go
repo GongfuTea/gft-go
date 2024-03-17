@@ -1,9 +1,13 @@
 package cms_handlers
 
-import "github.com/GongfuTea/gft-go/core/gql"
+import (
+	"github.com/GongfuTea/gft-go/core/gql"
+	"github.com/GongfuTea/gft-go/shop/product"
+)
 
 func UseDefaultGqlResolvers() {
 	enagine := gql.DefaultSchemaEngine
-	enagine.AddResolver(&ProductCategoryResolver{})
-	enagine.AddResolver(&ShopProductResolver{})
+	service := product.NewProductService()
+	enagine.AddResolver(NewProductCategoryResolver(service))
+	enagine.AddResolver(NewShopProductResolver(service))
 }

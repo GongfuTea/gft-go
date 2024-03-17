@@ -1,32 +1,31 @@
 package cms_handlers
 
 import (
-	"time"
-
 	"github.com/GongfuTea/gft-go/core/mgo"
 	"github.com/GongfuTea/gft-go/shop/product"
 	"github.com/GongfuTea/gft-go/shop/product/commands"
 	"github.com/GongfuTea/gft-go/shop/product/queries"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ShopProductResolver struct {
+	productService *product.ProductService
+}
+
+func NewShopProductResolver(productService *product.ProductService) *ShopProductResolver {
+	return &ShopProductResolver{
+		productService: productService,
+	}
 }
 
 func (r *ShopProductResolver) SaveShopProduct(cmd commands.SaveShopProduct) (string, error) {
 	if cmd.Id != "" {
-		_, err := product.ShopProductRepo.UpdateById(cmd.Id, cmd.Input)
+		_, err := r.productService.ShopProductRepo.UpdateById(cmd.Id, cmd.Input)
 		return cmd.Id, err
 	}
 
-	item := product.GftShopProduct{
-		// Note:      cmd.Input.Note,
-		// SortOrder: cmd.Input.SortOrder,
-	}
-	item.Id = uuid.NewString()
-	item.CreatedAt = time.Now()
-	_, err := product.ShopProductRepo.Save(&item)
+	item := product.NewShopProduct(cmd.Input)
+	_, err := r.productService.ShopProductRepo.Save(item)
 	return item.Id, err
 }
 
@@ -35,16 +34,16 @@ func (r *ShopProductResolver) ShopProducts(q queries.ShopProducts) (mgo.QueryPag
 	if q.Filter.Category != "" {
 		m["categoryIds"] = q.Filter.Category
 	}
-	res, err := product.ShopProductRepo.Find(m).Page(&q.Filter.PagerFilter)
+	res, err := r.productService.ShopProductRepo.Find(m).Page(&q.Filter.PagerFilter)
 
 	return res, err
 
 }
 
 func (r *ShopProductResolver) ShopProduct(q queries.ShopProduct) (*product.GftShopProduct, error) {
-	return product.ShopProductRepo.Get(q.Id)
+	return r.productService.ShopProductRepo.Get(q.Id)
 }
 
 func (r *ShopProductResolver) DelShopProduct(cmd commands.DelShopProduct) (bool, error) {
-	return product.ShopProductRepo.Del(cmd.Id)
+	return r.productService.ShopProductRepo.Del(cmd.Id)
 }

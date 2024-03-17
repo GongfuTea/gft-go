@@ -5,9 +5,11 @@ import (
 )
 
 type GftProductCategoryRepo struct {
-	*mgo.MgoRepo[*GftProductCategory]
+	*mgo.MgoTreeRepo[*GftProductCategory]
 }
 
-var ProductCategoryRepo = &GftProductCategoryRepo{
-	mgo.NewMgoRepo[*GftProductCategory]("GftProductCategory"),
+func NewProductCategoryRepo() *GftProductCategoryRepo {
+	return &GftProductCategoryRepo{
+		mgo.NewMgoTreeRepo[*GftProductCategory]("GftProductCategory"),
+	}
 }

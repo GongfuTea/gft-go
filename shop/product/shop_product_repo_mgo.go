@@ -8,6 +8,8 @@ type GftShopProductRepo struct {
 	*mgo.MgoRepo[*GftShopProduct]
 }
 
-var ShopProductRepo = &GftShopProductRepo{
-	mgo.NewMgoRepo[*GftShopProduct]("GftShopProduct"),
+func NewShopProductRepo() *GftShopProductRepo {
+	return &GftShopProductRepo{
+		mgo.NewMgoRepo[*GftShopProduct]("GftShopProduct"),
+	}
 }
