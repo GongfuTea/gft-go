@@ -7,27 +7,34 @@ import (
 )
 
 type CmsBannerResolver struct {
+	cmsService *cms.CmsService
+}
+
+func NewBannerResolver(cmsService *cms.CmsService) *CmsBannerResolver {
+	return &CmsBannerResolver{
+		cmsService: cmsService,
+	}
 }
 
 func (r *CmsBannerResolver) SaveCmsBanner(cmd commands.SaveCmsBanner) (string, error) {
 	if cmd.Id != "" {
-		_, err := cms.CmsBannerRepo.UpdateById(cmd.Id, cmd.Input)
+		_, err := r.cmsService.BannerRepo.UpdateById(cmd.Id, cmd.Input)
 		return cmd.Id, err
 	}
 
 	item := cms.NewCmsBanner(cmd.Input)
-	_, err := cms.CmsBannerRepo.Insert(item)
+	_, err := r.cmsService.BannerRepo.Insert(item)
 	return item.Id, err
 }
 
 func (r *CmsBannerResolver) CmsBanners(cmd queries.CmsBanners) ([]*cms.GftCmsBanner, error) {
-	return cms.CmsBannerRepo.All()
+	return r.cmsService.BannerRepo.All()
 }
 
 func (r *CmsBannerResolver) CmsBanner(cmd queries.CmsBanner) (*cms.GftCmsBanner, error) {
-	return cms.CmsBannerRepo.Get(cmd.Id)
+	return r.cmsService.BannerRepo.Get(cmd.Id)
 }
 
 func (r *CmsBannerResolver) DelCmsBanner(cmd commands.DelCmsBanner) (bool, error) {
-	return cms.CmsBannerRepo.Del(cmd.Id)
+	return r.cmsService.BannerRepo.Del(cmd.Id)
 }

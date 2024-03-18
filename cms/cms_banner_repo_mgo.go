@@ -8,6 +8,8 @@ type GftCmsBannerRepo struct {
 	*mgo.MgoRepo[*GftCmsBanner]
 }
 
-var CmsBannerRepo = &GftCmsBannerRepo{
-	mgo.NewMgoRepo[*GftCmsBanner]("GftCmsBanner"),
+func NewBannerRepo() *GftCmsBannerRepo {
+	return &GftCmsBannerRepo{
+		mgo.NewMgoRepo[*GftCmsBanner]("GftCmsBanner"),
+	}
 }

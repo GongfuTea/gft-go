@@ -2,11 +2,13 @@ package cms
 
 type CmsService struct {
 	BannerCategoryRepo *GftCmsBannerCategoryRepo
+	BannerRepo         *GftCmsBannerRepo
 }
 
 func NewCmsService() *CmsService {
 	return &CmsService{
 		BannerCategoryRepo: NewBannerCategoryRepo(),
+		BannerRepo:         NewBannerRepo(),
 	}
 }
 

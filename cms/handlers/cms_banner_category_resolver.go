@@ -10,9 +10,9 @@ type CmsBannerCategoryResolver struct {
 	cmsService *cms.CmsService
 }
 
-func NewBannerCategoryResolver() *CmsBannerCategoryResolver {
+func NewBannerCategoryResolver(cmsService *cms.CmsService) *CmsBannerCategoryResolver {
 	return &CmsBannerCategoryResolver{
-		cmsService: cms.NewCmsService(),
+		cmsService: cmsService,
 	}
 }
 
