@@ -1,6 +1,6 @@
 package commands
 
-import "github.com/GongfuTea/gft-go/shop/product"
+import "github.com/GongfuTea/gft-go/mall/product"
 
 type SaveShopProduct struct {
 	Id    string                  `json:"id,omitempty"`

@@ -2,7 +2,7 @@ package cms_handlers
 
 import (
 	"github.com/GongfuTea/gft-go/core/gql"
-	"github.com/GongfuTea/gft-go/shop/product"
+	"github.com/GongfuTea/gft-go/mall/product"
 )
 
 func UseDefaultGqlResolvers() {

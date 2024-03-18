@@ -2,9 +2,9 @@ package cms_handlers
 
 import (
 	"github.com/GongfuTea/gft-go/core/mgo"
-	"github.com/GongfuTea/gft-go/shop/product"
-	"github.com/GongfuTea/gft-go/shop/product/commands"
-	"github.com/GongfuTea/gft-go/shop/product/queries"
+	"github.com/GongfuTea/gft-go/mall/product"
+	"github.com/GongfuTea/gft-go/mall/product/commands"
+	"github.com/GongfuTea/gft-go/mall/product/queries"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
