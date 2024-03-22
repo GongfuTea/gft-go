@@ -36,7 +36,8 @@ func Set转专业(xh string, diff map[string]types.GftTimelineDiff, rq time.Time
 }
 
 func Set退学(xh string, txrq time.Time, note string) {
-	dqzt, _ := base.DictItemRepo.FindByItemName("JY.XSDQZT", "退学")
+	baseService := base.NewBaseService()
+	dqzt, _ := baseService.DictItemRepo.FindByItemName("JY.XSDQZT", "退学")
 
 	if dqzt == nil {
 		panic("获取学生当前状态字典错误")

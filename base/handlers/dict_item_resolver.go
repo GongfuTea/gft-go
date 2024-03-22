@@ -1,42 +1,36 @@
-package handlers
+package base_handlers
 
 import (
-	"time"
-
 	"github.com/GongfuTea/gft-go/base"
 	"github.com/GongfuTea/gft-go/base/commands"
 	"github.com/GongfuTea/gft-go/base/queries"
-	"github.com/google/uuid"
 )
 
 type DictItemResolver struct {
+	BaseService *base.BaseService
+}
+
+func NewDictItemResolver(baseService *base.BaseService) *DictItemResolver {
+	return &DictItemResolver{
+		BaseService: baseService,
+	}
 }
 
 func (r *DictItemResolver) SaveDictItem(cmd commands.SaveDictItem) (string, error) {
 	if cmd.Id != "" {
-		_, err := base.DictItemRepo.UpdateById(cmd.Id, cmd.Input)
+		_, err := r.BaseService.DictItemRepo.UpdateById(cmd.Id, cmd.Input)
 		return cmd.Id, err
 	}
 
-	item := base.GftDictItem{
-		Name:       cmd.Input.Name,
-		CategoryId: cmd.Input.CategoryId,
-		Code:       cmd.Input.Code,
-		Level:      cmd.Input.Level,
-		Nickname:   cmd.Input.Nickname,
-		Note:       cmd.Input.Note,
-		SortOrder:  cmd.Input.SortOrder,
-	}
-	item.Id = uuid.NewString()
-	item.CreatedAt = time.Now()
-	_, err := base.DictItemRepo.Save(&item)
+	item := base.NewDictItem(cmd.Input)
+	_, err := r.BaseService.DictItemRepo.Insert(item)
 	return item.Id, err
 }
 
 func (r *DictItemResolver) DictItems(q queries.DictItems) ([]*base.GftDictItem, error) {
-	return base.DictItemRepo.FindByCategoryId(q.CategoryId)
+	return r.BaseService.DictItemRepo.FindByCategoryId(q.CategoryId)
 }
 
 func (r *DictCategoryResolver) DelDictItem(cmd commands.DelDictItem) (bool, error) {
-	return base.DictItemRepo.Del(cmd.Id)
+	return r.BaseService.DictItemRepo.Del(cmd.Id)
 }

@@ -16,8 +16,10 @@ type GftUserRepo struct {
 	*mgo.MgoRepo[*GftUser]
 }
 
-var UserRepo = &GftUserRepo{
-	mgo.NewMgoRepo[*GftUser]("GftUser"),
+func NewUserRepo() *GftUserRepo {
+	return &GftUserRepo{
+		mgo.NewMgoRepo[*GftUser]("GftUser"),
+	}
 }
 
 func (repo GftUserRepo) Create(username string, password string) (*GftUser, error) {

@@ -1,4 +1,4 @@
-package handlers
+package user_handlers
 
 import (
 	"github.com/GongfuTea/gft-go/user"
@@ -8,14 +8,21 @@ import (
 )
 
 type UserResolver struct {
+	userService *user.UserService
+}
+
+func NewUserResolver(userService *user.UserService) *UserResolver {
+	return &UserResolver{
+		userService: userService,
+	}
 }
 
 func (r *UserResolver) Login(cmd commands.UserLogin) (*auth.TokenDetails, error) {
 	username := cmd.Username
 	pass := cmd.Password
-	return user.UserRepo.Login(username, pass)
+	return r.userService.UserRepo.Login(username, pass)
 }
 
 func (r *UserResolver) Users(q queries.Users) ([]user.GftUser, error) {
-	return user.UserRepo.All()
+	return r.userService.UserRepo.All()
 }

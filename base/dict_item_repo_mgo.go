@@ -9,8 +9,10 @@ type GftDictItemRepo struct {
 	*mgo.MgoRepo[*GftDictItem]
 }
 
-var DictItemRepo = &GftDictItemRepo{
-	mgo.NewMgoRepo[*GftDictItem]("GftDictItem"),
+func NewDictItemRepo() *GftDictItemRepo {
+	return &GftDictItemRepo{
+		mgo.NewMgoRepo[*GftDictItem]("GftDictItem"),
+	}
 }
 
 func (r *GftDictItemRepo) FindByCategoryId(categoryId string) ([]*GftDictItem, error) {

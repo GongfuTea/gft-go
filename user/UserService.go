@@ -1,5 +1,11 @@
 package user
 
 type UserService struct {
-	userRepository UserRepository
+	UserRepo *GftUserRepo
+}
+
+func NewUserService() *UserService {
+	return &UserService{
+		UserRepo: NewUserRepo(),
+	}
 }

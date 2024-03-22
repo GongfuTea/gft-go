@@ -26,12 +26,13 @@ type XxwFile struct {
 func NewXxwFile() *XxwFile {
 	xxw := &XxwFile{}
 	xxw.YxsList, _ = jc.GsYxsRepo.All()
-	xxw.MzList, _ = base.DictItemRepo.FindByCategoryId("GB.MZ")
-	xxw.ZzmmList, _ = base.DictItemRepo.FindByCategoryId("GB.ZZMM")
-	xxw.ZjlxList, _ = base.DictItemRepo.FindByCategoryId("JY.SFZJLX")
-	xxw.XxxsList, _ = base.DictItemRepo.FindByCategoryId("XX.XXXS")
-	xxw.PyfsList, _ = base.DictItemRepo.FindByCategoryId("JY.PYFS")
-	xxw.XsdqztList, _ = base.DictItemRepo.FindByCategoryId("JY.XSDQZT")
+	baseService := base.NewBaseService()
+	xxw.MzList, _ = baseService.DictItemRepo.FindByCategoryId("GB.MZ")
+	xxw.ZzmmList, _ = baseService.DictItemRepo.FindByCategoryId("GB.ZZMM")
+	xxw.ZjlxList, _ = baseService.DictItemRepo.FindByCategoryId("JY.SFZJLX")
+	xxw.XxxsList, _ = baseService.DictItemRepo.FindByCategoryId("XX.XXXS")
+	xxw.PyfsList, _ = baseService.DictItemRepo.FindByCategoryId("JY.PYFS")
+	xxw.XsdqztList, _ = baseService.DictItemRepo.FindByCategoryId("JY.XSDQZT")
 	return xxw
 }
 

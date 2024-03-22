@@ -1,4 +1,4 @@
-package handlers
+package admin_handlers
 
 import (
 	"fmt"
@@ -10,6 +10,13 @@ import (
 )
 
 type AdminResolver struct {
+	AdminService *admin.AdminService
+}
+
+func NewAdminResolver(adminService *admin.AdminService) *AdminResolver {
+	return &AdminResolver{
+		AdminService: adminService,
+	}
 }
 
 func (r *AdminResolver) AdminLogin(cmd commands.AdminLogin) (*auth.TokenDetails, error) {
@@ -17,9 +24,9 @@ func (r *AdminResolver) AdminLogin(cmd commands.AdminLogin) (*auth.TokenDetails,
 	pass := cmd.Password
 	fmt.Printf("user: %s, %s", user, pass)
 
-	return admin.AdminRepo.Login(user, pass)
+	return r.AdminService.AdminRepo.Login(user, pass)
 }
 
-func (r *AdminResolver) Admins(q queries.Admins) ([]admin.GftAdmin, error) {
-	return admin.AdminRepo.All()
+func (r *AdminResolver) Admins(q queries.Admins) ([]*admin.GftAuthAdmin, error) {
+	return r.AdminService.AdminRepo.All()
 }
