@@ -13,8 +13,10 @@ type GftAuthRoleRepo struct {
 	*mgo.MgoRepo[*GftAuthRole]
 }
 
-var AuthRoleRepo = &GftAuthRoleRepo{
-	mgo.NewMgoRepo[*GftAuthRole]("GftAuthRole"),
+func NewAuthRoleRepo() *GftAuthRoleRepo {
+	return &GftAuthRoleRepo{
+		mgo.NewMgoRepo[*GftAuthRole]("GftAuthRole"),
+	}
 }
 
 func (repo GftAuthRoleRepo) All() ([]GftAuthRole, error) {

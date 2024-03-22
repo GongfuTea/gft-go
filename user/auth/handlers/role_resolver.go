@@ -1,4 +1,4 @@
-package handlers
+package auth_handlers
 
 import (
 	"github.com/GongfuTea/gft-go/user/auth"
@@ -7,23 +7,30 @@ import (
 )
 
 type RoleResolver struct {
+	authService *auth.AuthService
+}
+
+func NewRoleResolver(authService *auth.AuthService) *RoleResolver {
+	return &RoleResolver{
+		authService: authService,
+	}
 }
 
 func (r *RoleResolver) SaveAuthRole(cmd commands.SaveAuthRole) (string, error) {
 	if cmd.Id != "" {
-		_, err := auth.AuthRoleRepo.UpdateById(cmd.Id, cmd.Input)
+		_, err := r.authService.RoleRepo.UpdateById(cmd.Id, cmd.Input)
 		return cmd.Id, err
 	}
 
 	role := auth.NewAuthRole(cmd.Input)
-	_, err := auth.AuthRoleRepo.Save(role)
+	_, err := r.authService.RoleRepo.Save(role)
 	return role.Id, err
 }
 
 func (r *RoleResolver) AuthRoles(cmd queries.AuthRoles) ([]auth.GftAuthRole, error) {
-	return auth.AuthRoleRepo.All()
+	return r.authService.RoleRepo.All()
 }
 
 func (r *RoleResolver) DelAuthRole(cmd commands.DelAuthRole) (bool, error) {
-	return auth.AuthRoleRepo.Del(cmd.Id)
+	return r.authService.RoleRepo.Del(cmd.Id)
 }

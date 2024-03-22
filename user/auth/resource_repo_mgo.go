@@ -13,8 +13,10 @@ type GftAuthResourceRepo struct {
 	*mgo.MgoTreeRepo[*GftAuthResource]
 }
 
-var AuthResourceRepo = &GftAuthResourceRepo{
-	mgo.NewMgoTreeRepo[*GftAuthResource]("GftAuthResource"),
+func NewAuthResourceRepo() *GftAuthResourceRepo {
+	return &GftAuthResourceRepo{
+		mgo.NewMgoTreeRepo[*GftAuthResource]("GftAuthResource"),
+	}
 }
 
 // func (repo GftAuthResourceRepo) Save(model auth.GftAuthResource) (*auth.GftAuthResource, error) {
@@ -61,7 +63,7 @@ func (repo GftAuthResourceRepo) All() ([]GftAuthResource, error) {
 		return nil, err
 	}
 	cur.Close(ctx)
-	return results, nil 
+	return results, nil
 }
 
 // func (repo GftAuthResourceRepo) Get(id string) (*auth.GftAuthResource, error) {

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/GongfuTea/gft-go/types"
+	"github.com/GongfuTea/gft-go/x/jsonx"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -47,7 +48,13 @@ func (repo MgoTreeRepo[T]) Save2(model T, oldMpath string) (T, error) {
 	o, err := repo.MgoRepo.Save(model)
 
 	if err == nil && oldMpath != "" && oldMpath != model.GetMpath() {
+		fmt.Println("\n\nSave2\n\n", oldMpath, model.GetCode(), model.GetMpath())
+
 		nodes, err := repo.SubNodes(oldMpath)
+
+		for _, node := range nodes {
+			jsonx.PrintAsJson("Node", node)
+		}
 		if err == nil {
 			err = repo.UpdateSubNodesMpath(nodes, oldMpath, model.GetMpath())
 		}
@@ -57,12 +64,12 @@ func (repo MgoTreeRepo[T]) Save2(model T, oldMpath string) (T, error) {
 }
 
 func (repo MgoTreeRepo[T]) SubNodes(mpath string) ([]T, error) {
-	q := repo.Find(bson.M{"mpath": bson.M{"$regex": "^" + mpath}})
+	q := repo.Find(bson.M{"mpath": bson.M{"$regex": "^" + mpath + "\\."}})
 	return q.All()
 }
 
 func (repo MgoTreeRepo[T]) CountSubNodes(mpath string) (int64, error) {
-	q := repo.Find(bson.M{"mpath": bson.M{"$regex": "^" + mpath}})
+	q := repo.Find(bson.M{"mpath": bson.M{"$regex": "^" + mpath + "\\."}})
 	return q.Count()
 }
 

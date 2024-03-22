@@ -1,38 +1,33 @@
-package handlers
+package auth_handlers
 
 import (
-	"time"
-
 	"github.com/GongfuTea/gft-go/user/auth"
 	"github.com/GongfuTea/gft-go/user/auth/commands"
 	"github.com/GongfuTea/gft-go/user/auth/queries"
-	"github.com/google/uuid"
 )
 
 type ResourceResolver struct {
+	authService *auth.AuthService
+}
+
+func NewResourceResolver(authService *auth.AuthService) *ResourceResolver {
+	return &ResourceResolver{
+		authService: authService,
+	}
 }
 
 func (r *ResourceResolver) AuthResources(q queries.AuthResources) ([]auth.GftAuthResource, error) {
-	return auth.AuthResourceRepo.All()
+	return r.authService.ResourceRepo.All()
 }
 
 func (r *ResourceResolver) AuthResource(q queries.AuthResource) (*auth.GftAuthResource, error) {
-	return auth.AuthResourceRepo.Get(q.Id)
+	return r.authService.ResourceRepo.Get(q.Id)
 }
 
 func (r *ResourceResolver) SaveAuthResource(cmd commands.SaveAuthResource) (string, error) {
-	if cmd.Id != "" {
-		_, err := auth.AuthResourceRepo.UpdateById(cmd.Id, cmd.Input)
-		return cmd.Id, err
-	}
-
-	res := auth.NewAuthResource(cmd.Input)
-	res.Id = uuid.NewString()
-	res.CreatedAt = time.Now()
-	_, err := auth.AuthResourceRepo.Save(res)
-	return res.Id, err
+	return r.authService.SaveResource(cmd.Id, cmd.Input)
 }
 
 func (r *ResourceResolver) DelAuthResource(cmd commands.DelAuthResource) (bool, error) {
-	return auth.AuthResourceRepo.Del(cmd.Id)
+	return r.authService.ResourceRepo.Del(cmd.Id)
 }
