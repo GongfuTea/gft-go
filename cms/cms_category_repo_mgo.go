@@ -8,6 +8,8 @@ type GftCmsCategoryRepo struct {
 	*mgo.MgoTreeRepo[*GftCmsCategory]
 }
 
-var CmsCategoryRepo = &GftCmsCategoryRepo{
-	mgo.NewMgoTreeRepo[*GftCmsCategory]("GftCmsCategory"),
+func NewCmsCategoryRepo() *GftCmsCategoryRepo {
+	return &GftCmsCategoryRepo{
+		mgo.NewMgoTreeRepo[*GftCmsCategory]("GftCmsCategory"),
+	}
 }

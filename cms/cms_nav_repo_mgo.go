@@ -8,6 +8,8 @@ type GftCmsNavRepo struct {
 	*mgo.MgoTreeRepo[*GftCmsNav]
 }
 
-var CmsNavRepo = &GftCmsNavRepo{
-	mgo.NewMgoTreeRepo[*GftCmsNav]("GftCmsNav"),
+func NewCmsNavRepo() *GftCmsNavRepo {
+	return &GftCmsNavRepo{
+		mgo.NewMgoTreeRepo[*GftCmsNav]("GftCmsNav"),
+	}
 }

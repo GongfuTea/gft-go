@@ -1,19 +1,12 @@
 package commands
 
+import "github.com/GongfuTea/gft-go/edu/gs/jc"
+
 type SaveGsYxs struct {
-	Id    string         `json:"id,omitempty"`
-	Input SaveGsYxsInput `json:"input"`
+	Id    string       `json:"id,omitempty"`
+	Input jc.GsYxsData `json:"input"`
 }
 
 type DelGsYxs struct {
 	Id string `json:"id"`
-}
-
-type SaveGsYxsInput struct {
-	Name      string  `bson:"name,omitempty" json:"name,omitempty"`
-	Code      string  `bson:"code,omitempty" json:"code,omitempty"`
-	Pid       string  `bson:"pid,omitempty" json:"pid,omitempty"`
-	Nickname  string  `bson:"nickname,omitempty" json:"nickname,omitempty"`
-	SortOrder float32 `bson:"sortOrder,omitempty" json:"sortOrder,omitempty"`
-	Note      string  `bson:"note" json:"note"`
 }

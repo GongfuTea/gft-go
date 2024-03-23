@@ -9,7 +9,6 @@ import (
 	"github.com/GongfuTea/gft-go/user/auth"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type GftUserRepo struct {
@@ -37,8 +36,7 @@ func (repo GftUserRepo) Create(username string, password string) (*GftUser, erro
 	}
 
 	user.Id = uuid.NewString()
-	t := time.Now()
-	user.CreatedAt = &t
+	user.CreatedAt = time.Now()
 	user.Username = username
 	user.Password = pass
 
@@ -64,63 +62,4 @@ func (repo GftUserRepo) Login(username string, password string) (*auth.TokenDeta
 	}
 
 	return auth.CreateToken(results.Id)
-}
-
-func (repo GftUserRepo) Save(model GftUser) (*GftUser, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	var err error
-
-	if model.Id == "" {
-		model.Id = uuid.NewString()
-		t := time.Now()
-		model.CreatedAt = &t
-		_, err = repo.Coll().InsertOne(ctx, model)
-
-	} else {
-		q2 := bson.M{"$set": model}
-		_, err = repo.Coll().UpdateByID(ctx, model.Id, q2)
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	return &model, nil
-
-}
-
-func (repo GftUserRepo) All() ([]GftUser, error) {
-	var results []GftUser
-	var err error
-
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	cur, err := repo.Coll().Find(ctx, bson.D{}, options.Find())
-	if err != nil {
-		return nil, err
-	}
-	for cur.Next(ctx) {
-		var elem GftUser
-		err = cur.Decode(&elem)
-		if err != nil {
-			return nil, err
-		}
-		results = append(results, elem)
-	}
-	if err = cur.Err(); err != nil {
-		return nil, err
-	}
-	cur.Close(ctx)
-	return results, nil
-}
-
-func (repo GftUserRepo) Del(id string) (bool, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-
-	q := bson.M{"_id": id}
-	_, err := repo.Coll().DeleteOne(ctx, q)
-
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-
 }

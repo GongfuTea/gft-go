@@ -8,6 +8,8 @@ type GftGsYxsRepo struct {
 	*mgo.MgoTreeRepo[*GftGsYxs]
 }
 
-var GsYxsRepo = &GftGsYxsRepo{
-	mgo.NewMgoTreeRepo[*GftGsYxs]("GftGsYxs"),
+func NewGsYxsRepo() *GftGsYxsRepo {
+	return &GftGsYxsRepo{
+		mgo.NewMgoTreeRepo[*GftGsYxs]("GftGsYxs"),
+	}
 }

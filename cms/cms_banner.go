@@ -9,8 +9,8 @@ import (
 
 type GftCmsBanner struct {
 	types.Entity    `bson:",inline" json:",inline"`
-	CmsBannerData   `bson:",inline" json:",inline"`
 	types.ModelBase `bson:",inline" json:",inline"`
+	CmsBannerData   `bson:",inline" json:",inline"`
 }
 
 type CmsBannerData struct {

@@ -23,6 +23,6 @@ func (r *UserResolver) Login(cmd commands.UserLogin) (*auth.TokenDetails, error)
 	return r.userService.UserRepo.Login(username, pass)
 }
 
-func (r *UserResolver) Users(q queries.Users) ([]user.GftUser, error) {
+func (r *UserResolver) Users(q queries.Users) ([]*user.GftUser, error) {
 	return r.userService.UserRepo.All()
 }

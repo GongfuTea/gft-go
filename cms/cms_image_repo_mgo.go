@@ -8,6 +8,8 @@ type GftCmsImageRepo struct {
 	*mgo.MgoRepo[*GftCmsImage]
 }
 
-var CmsImageRepo = &GftCmsImageRepo{
-	mgo.NewMgoRepo[*GftCmsImage]("GftCmsImage"),
+func NewCmsImageRepo() *GftCmsImageRepo {
+	return &GftCmsImageRepo{
+		mgo.NewMgoRepo[*GftCmsImage]("GftCmsImage"),
+	}
 }

@@ -25,7 +25,8 @@ type XxwFile struct {
 
 func NewXxwFile() *XxwFile {
 	xxw := &XxwFile{}
-	xxw.YxsList, _ = jc.GsYxsRepo.All()
+	jcService := jc.NewGsJcService()
+	xxw.YxsList, _ = jcService.YxsRepo.All()
 	baseService := base.NewBaseService()
 	xxw.MzList, _ = baseService.DictItemRepo.FindByCategoryId("GB.MZ")
 	xxw.ZzmmList, _ = baseService.DictItemRepo.FindByCategoryId("GB.ZZMM")
@@ -200,35 +201,37 @@ func (file *XxwFile) getXj(item xlsx.ItemMap) *GftGsXj {
 	rxrq := file.GetTime(item, "rxrq")
 
 	stu := &GftGsXj{
-		Ksh:     item.GetField("ksh"),
-		Xh:      item.GetField("xh"),
-		Xm:      item.GetField("xm"),
-		Xb:      item.GetField("xb"),
-		Xbm:     file.Xbm(item),
-		Csrq:    file.GetTime(item, "csrq"),
-		Sfzh:    item.GetField("xm"),
-		Zzmmm:   file.GetZzmm(item).Code,
-		Zzmm:    file.GetZzmm(item).Name,
-		Mz:      file.GetMz(item).Name,
-		Mzm:     file.GetMz(item).Code,
-		Zjlx:    file.GetZjlx(item).Name,
-		Zjlxm:   file.GetZjlx(item).Code,
-		Zydm:    item.GetField("zydm"),
-		Zymc:    item.GetField("zymc"),
-		Yxsm:    file.GetYxs(item).Code,
-		Yxs:     file.GetYxs(item).Name,
-		Pycc:    item.GetField("cc"),
-		Pyccm:   file.GetPyccm(item),
-		Xz:      item.GetFloat("xz"),
-		Xxxs:    file.GetXxxs(item).Name,
-		Xxxsm:   file.GetXxxs(item).Code,
-		Nj:      item.GetInt("dqszj"),
-		Rxrq:    rxrq,
-		Yjbyrq:  file.GetTime(item, "yjbyrq"),
-		Xsdqztm: file.GetXjzt(item).Code,
-		Xsdqzt:  file.GetXjzt(item).Name,
-		Pyfs:    file.GetPyfs(item).Name,
-		Pyfsm:   file.GetPyfs(item).Code,
+		GsXjData: GsXjData{
+			Ksh:     item.GetField("ksh"),
+			Xh:      item.GetField("xh"),
+			Xm:      item.GetField("xm"),
+			Xb:      item.GetField("xb"),
+			Xbm:     file.Xbm(item),
+			Csrq:    file.GetTime(item, "csrq"),
+			Sfzh:    item.GetField("xm"),
+			Zzmmm:   file.GetZzmm(item).Code,
+			Zzmm:    file.GetZzmm(item).Name,
+			Mz:      file.GetMz(item).Name,
+			Mzm:     file.GetMz(item).Code,
+			Zjlx:    file.GetZjlx(item).Name,
+			Zjlxm:   file.GetZjlx(item).Code,
+			Zydm:    item.GetField("zydm"),
+			Zymc:    item.GetField("zymc"),
+			Yxsm:    file.GetYxs(item).Code,
+			Yxs:     file.GetYxs(item).Name,
+			Pycc:    item.GetField("cc"),
+			Pyccm:   file.GetPyccm(item),
+			Xz:      item.GetFloat("xz"),
+			Xxxs:    file.GetXxxs(item).Name,
+			Xxxsm:   file.GetXxxs(item).Code,
+			Nj:      item.GetInt("dqszj"),
+			Rxrq:    rxrq,
+			Yjbyrq:  file.GetTime(item, "yjbyrq"),
+			Xsdqztm: file.GetXjzt(item).Code,
+			Xsdqzt:  file.GetXjzt(item).Name,
+			Pyfs:    file.GetPyfs(item).Name,
+			Pyfsm:   file.GetPyfs(item).Code,
+		},
 	}
 
 	return stu

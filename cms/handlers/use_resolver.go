@@ -8,10 +8,10 @@ import (
 func UseDefaultGqlResolvers() {
 	enagine := gql.DefaultSchemaEngine
 	service := cms.NewCmsService()
-	enagine.AddResolver(&CmsImageResolver{})
-	enagine.AddResolver(&CmsCategoryResolver{})
-	enagine.AddResolver(&CmsNavResolver{})
-	enagine.AddResolver(&CmsPostResolver{})
+	enagine.AddResolver(NewImageResolver(service))
+	enagine.AddResolver(NewCategoryResolver(service))
+	enagine.AddResolver(NewCmsNavResolver(service))
+	enagine.AddResolver(NewPostResolver(service))
 	enagine.AddResolver(NewBannerResolver(service))
 	enagine.AddResolver(NewBannerCategoryResolver(service))
 }

@@ -9,6 +9,8 @@ type GftXgJzGjjxjRepo struct {
 	*mgo.MgoRepo[*gjjxj.GftXgJzGjjxj]
 }
 
-var XgJzGjjxjRepo = &GftXgJzGjjxjRepo{
-	mgo.NewMgoRepo[*gjjxj.GftXgJzGjjxj]("GftXgJzGjjxj"),
+func NewXgJzGjjxjRepo() *GftXgJzGjjxjRepo {
+	return &GftXgJzGjjxjRepo{
+		mgo.NewMgoRepo[*gjjxj.GftXgJzGjjxj]("GftXgJzGjjxj"),
+	}
 }

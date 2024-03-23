@@ -3,11 +3,17 @@ package cms
 import (
 	"time"
 
-	"github.com/GongfuTea/gft-go/core/db"
+	"github.com/GongfuTea/gft-go/types"
+	"github.com/google/uuid"
 )
 
 type GftCmsPost struct {
-	db.DbEntity  `bson:",inline" json:",inline"`
+	types.Entity    `bson:",inline" json:",inline"`
+	types.ModelBase `bson:",inline" json:",inline"`
+	CmsPostData     `bson:",inline" json:",inline"`
+}
+
+type CmsPostData struct {
 	Title        string      `bson:"title" json:"title"`
 	SubTitle     string      `bson:"subTitle" json:"subTitle,omitempty"`
 	Abstract     string      `bson:"abstract" json:"abstract,omitempty"`
@@ -20,9 +26,17 @@ type GftCmsPost struct {
 	Note         string      `bson:"note" json:"note"`
 	Tags         []string    `bson:"tags" json:"tags"`
 	CategoryIds  []string    `bson:"categoryIds" json:"categoryIds"`
-	CreatedBy    string      `bson:"createdBy,omitempty" json:"createdBy,omitempty"`
 	PublishDate  time.Time   `bson:"publishDate,omitempty" json:"publishDate,omitempty"`
 	PublishDepts []string    `bson:"publishDepts" json:"publishDepts"`
 	AccessLevel  AccessLevel `bson:"accessLevel" json:"accessLevel"`
 	NewWindow    bool        `bson:"newWindow" json:"newWindow"`
+}
+
+func NewCmsPost(data CmsPostData) *GftCmsPost {
+	item := &GftCmsPost{
+		CmsPostData: data,
+	}
+	item.Id = uuid.NewString()
+	item.CreatedAt = time.Now()
+	return item
 }
